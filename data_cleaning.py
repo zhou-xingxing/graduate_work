@@ -57,6 +57,7 @@ def sim_replace(s):
     s = re.sub('(额+)', '额额', s)
     s = re.sub('(嘿嘿+)', '嘿嘿', s)
     s = re.sub('(嘻嘻+)', '嘻嘻', s)
+    s = re.sub('(我我+)', '我我我', s)
     s = re.sub('(呜呜+)', '呜呜呜', s)
     s = re.sub('(嘤嘤+)', '嘤嘤嘤', s)
     s = re.sub('(啊啊+)', '啊啊啊', s)
