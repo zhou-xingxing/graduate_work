@@ -21,8 +21,8 @@ def symbol_replace(s):
     return s
 
 
-# test_str=" sdas【】，。2das "
-# print(symbol_replace(test_str))
+#test_str='"打韩信就是要各种卖队友和抢人头,不然后期就费了"'
+#print(symbol_replace(test_str))
 
 # 简繁体转换
 def tradition2simple(line):
@@ -118,8 +118,10 @@ with open(fin, 'r', encoding='utf-8') as f:
             line[2] = sim_replace(line[2])
             line[2] = emoji_replace(line[2])
         with open(fout, 'a', encoding='utf-8-sig', newline="") as nf:
+#            如果有逗号，会自动加引号
             writer = csv.writer(nf)
             writer.writerow(line)
 end_time = time.clock()
 print("处理结束：" + fout)
 print("处理时间：" + str(end_time - start_time))
+#16s
