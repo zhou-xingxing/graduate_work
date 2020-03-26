@@ -1,0 +1,5 @@
+如果发现了弹幕新词，先加到弹幕新词记录.txt里，如果该新词是情感词，则加入self_sentiment.txt
+
+最后self_dict加入弹幕新词记录，new_positive_dict和new_negative_dict加入self_sentiment
+
+stopwords要删掉可能包含的情感词
