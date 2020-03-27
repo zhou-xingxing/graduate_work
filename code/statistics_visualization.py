@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from pyecharts import Bar,Page,Line,WordCloud
 from collections import Counter
+import time
 
 
 
@@ -73,9 +74,11 @@ def draw_danmu_num(time_data,num_data):
 
 def cal_danmu_freq():
     #加载弹幕分词聚合数据
-    time_word=pd.read_csv(r'../code/time_word.csv',header=None)
-    time_word.columns=['time','word']
-    words=time_word['word'].tolist()
+    word=pd.read_csv(r'../data/st_jieba_cleaned_room36252danmu_500000.csv',header=None)
+    print("加载数据完毕")
+    start_time=time.clock()
+    word.columns=['id','time','word']
+    words=word['word'].tolist()
     words=' '.join(words)
     words=words.split(' ')
     result = Counter(words) 
@@ -93,13 +96,16 @@ def cal_danmu_freq():
     wd_fre=wd_fre.sort_values(by="num",ascending= False)
     
     # 删除频率小于某一值
-    dele=[]
-    for index,row in wd_fre.iterrows():
-        if row['num']<100:
-            dele.append(index)
-       
-    wd_fre=wd_fre.drop(index=dele)
-    return wd_fre['word'].tolist(),wd_fre['num'].tolist()
+#    dele=[]
+#    for index,row in wd_fre.iterrows():
+#        if row['num']<100:
+#            dele.append(index)
+#       
+#    wd_fre=wd_fre.drop(index=dele)
+    wd_fre.to_csv(r'../data/freq_st_jieba_cleaned_room36252danmu_500000.csv',header=None,index=None)
+    end_time=time.clock()
+    print('time: '+str(end_time-start_time))
+#    return wd_fre['word'].tolist(),wd_fre['num'].tolist()
 
 
 
@@ -112,9 +118,11 @@ def draw_danmu_wordcloud(word,freq):
 
 
 #加载词频数据
-word,freq=cal_danmu_freq()
+#word,freq=cal_danmu_freq()
+#
+#draw_danmu_wordcloud(word,freq) 
 
-draw_danmu_wordcloud(word,freq)   
+cal_danmu_freq()
     
     
     

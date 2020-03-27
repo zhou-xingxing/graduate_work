@@ -2,4 +2,6 @@
 
 最后self_dict加入弹幕新词记录，new_positive_dict和new_negative_dict加入self_sentiment
 
-stopwords要删掉可能包含的情感词
+stopwords 助词代词介词特殊符号
+
+最后所有的词典都要检查一下 避免交叉

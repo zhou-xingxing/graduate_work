@@ -1,6 +1,7 @@
 import csv, re, os, time
 from langconv import *
 
+
 # 弹幕数据清洗
 # （1）去除无意义弹幕（比如只有一个./,）,过滤特殊字符（非字母数字文字表情）
 # （2）对一些含义完全相同、表达存在细微差异的词（666+）作替换处理
@@ -21,8 +22,8 @@ def symbol_replace(s):
     return s
 
 
-#test_str='"打韩信就是要各种卖队友和抢人头,不然后期就费了"'
-#print(symbol_replace(test_str))
+# test_str='"打韩信就是要各种卖队友和抢人头,不然后期就费了"'
+# print(symbol_replace(test_str))
 
 # 简繁体转换
 def tradition2simple(line):
@@ -78,7 +79,7 @@ def sim_replace(s):
     return s
 
 
-with open("dyemot.txt", 'r')as f:
+with open(r"../dict/dyemot.txt", 'r')as f:
     emot_dict = eval(f.read())
     print("表情符号字典加载完毕")
 
@@ -89,22 +90,23 @@ def emoji_replace(s):
     for i in emot_dict.keys():
         s = re.sub('emot:' + i, emot_dict[i], s)
 
-    # s = re.sub('(😃)','[哈哈哈]',s)
-    # s = re.sub('(💩)', '[大便]', s)
-    # s = re.sub('(🐷)', '[猪头]', s)
-    # s = re.sub('(🐶)', '[狗头]', s)
-    # s = re.sub('(😂)', '[笑哭]', s)
-    # s = re.sub('(❤)', '[红心]', s)
+    s = re.sub('(😃😃😃+)', '😃😃😃', s)
+    s = re.sub('(💩💩💩+)', '💩💩💩', s)
+    s = re.sub('(🐷🐷🐷+)', '🐷🐷🐷', s)
+    s = re.sub('(🐶🐶🐶+)', '🐶🐶🐶', s)
+    s = re.sub('(😂😂😂+)', '😂😂😂', s)
+    s = re.sub('(❤❤❤+)', '❤❤❤', s)
+    s = re.sub('(🎉🎉🎉+)', '🎉🎉🎉', s)
+
     return s
 
-
-# test_str="[emot:dy101][emot:dy111]"
-# print(emoji_replace(test_str))
+#test_str = "[emot:dy101][emot:dy111]❤❤❤❤❤❤💩💩💩💩💩💩🎉🎉🎉🎉🎉🎉"
+#print(emoji_replace(test_str))
 
 # 开始处理
 # 以此文件的处理比例估算，可以减少1%的数据
-fin = "test_room911_20000.csv"
-fout = "cleaned_test_room911_20000.csv"
+fin = "../data/room36252danmu_500000.csv"
+fout = "../data/cleaned_room36252danmu_500000.csv"
 print("打开：" + fin)
 start_time = time.clock()
 with open(fin, 'r', encoding='utf-8') as f:
@@ -124,4 +126,4 @@ with open(fin, 'r', encoding='utf-8') as f:
 end_time = time.clock()
 print("处理结束：" + fout)
 print("处理时间：" + str(end_time - start_time))
-#16s
+# 50W 394s 497441/500000=99.5%
