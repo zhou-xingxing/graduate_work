@@ -59,37 +59,37 @@ def jieba_separate_word(sentence):
     ans = " ".join(seg_result.split())
     return ans
 
-sentence='...尼玛'
+#sentence='...尼玛'
 # jieba分不出 ??? !!! 结尾有一个.自动去掉
-print(jieba_separate_word(sentence))
+#print(jieba_separate_word(sentence))
 
-#fin="../data/cleaned_room36252danmu_500000.csv"
-#fout="../data/st_jieba_cleaned_room36252danmu_500000.csv"
-#
-#print("打开：" + fin)
-#start_time = time.clock()
-#with open(fin, 'r', encoding='utf-8') as f:
-#    reader = csv.reader(f)
-#    for line in reader:
-#        line[2] = jieba_separate_word(line[2])
-##        去空行
-#        if len(line[2])==0:
-#            continue
-#        with open(fout, 'a', encoding='utf-8-sig', newline="") as nf:
-#            writer = csv.writer(nf)
-#            writer.writerow(line)
-#end_time = time.clock()
-#print("处理结束：" + fout)
-#print("处理时间：" + str(end_time - start_time))
+fin="../data/cleaned_room36252danmu_500000.csv"
+fout="../data/st_jieba_cleaned_room36252danmu_500000.csv"
+
+print("打开：" + fin)
+start_time = time.clock()
+with open(fin, 'r', encoding='utf-8') as f:
+    reader = csv.reader(f)
+    for line in reader:
+        line[2] = jieba_separate_word(line[2])
+#        去空行
+        if len(line[2])==0:
+            continue
+        with open(fout, 'a', encoding='utf-8-sig', newline="") as nf:
+            writer = csv.writer(nf)
+            writer.writerow(line)
+end_time = time.clock()
+print("处理结束：" + fout)
+print("处理时间：" + str(end_time - start_time))
 # jieba 12-13s 50W 327s
 
 # 哈工大LTP分词 路径不能有中文
-#LTP_DATA_DIR = r'..\ltp_data_v3.4.0\ltp_data_v3.4.0'  # ltp模型目录的路径
-#cws_model_path = os.path.join(LTP_DATA_DIR, 'cws.model')  # 分词模型路径，模型名称为`cws.model`
-#from pyltp import Segmentor
-#
-#segmentor = Segmentor()  # 初始化实例
-#segmentor.load_with_lexicon(cws_model_path, r"..\dict\self_dict.txt")  # 加载模型，第二个参数是您的外部词典文件路径
+LTP_DATA_DIR = r'..\ltp_data_v3.4.0\ltp_data_v3.4.0'  # ltp模型目录的路径
+cws_model_path = os.path.join(LTP_DATA_DIR, 'cws.model')  # 分词模型路径，模型名称为`cws.model`
+from pyltp import Segmentor
+
+segmentor = Segmentor()  # 初始化实例
+segmentor.load_with_lexicon(cws_model_path, r"..\dict\self_dict.txt")  # 加载模型，第二个参数是您的外部词典文件路径
 
 
 def ltp_separate_word(sentence):
@@ -117,26 +117,26 @@ def ltp_separate_word(sentence):
 #print(ltp_separate_word('"fuck shit , 要 身份证 啊 , 他们 能 去 吗"'))
 
 
-#fin=r"../data/cleaned_room36252danmu_500000.csv"
-#fout=r"../data/st_ltp_cleaned_room36252danmu_500000.csv"
-#print("打开：" + fin)
-#start_time = time.clock()
-## 去停用词，会把把第一行去掉
-#with open(fin, 'r', encoding='utf-8') as f:
-#    reader = csv.reader(f)
-#    for line in reader:
-#        line[2] = ltp_separate_word(line[2])
-##        去空行
-#        if len(line[2])==0:
-#            continue
-#        with open(fout, 'a', encoding='utf-8-sig', newline="") as nf:
-#            writer = csv.writer(nf)
-#            writer.writerow(line)
-#end_time = time.clock()
-#print("处理结束：" + fout)
-#print("处理时间：" + str(end_time - start_time))
-## ltp 13s 去停用词好像没有变慢？？+1s 50W 347s
-#segmentor.release()
+fin=r"../data/cleaned_room36252danmu_500000.csv"
+fout=r"../data/st_ltp_cleaned_room36252danmu_500000.csv"
+print("打开：" + fin)
+start_time = time.clock()
+# 去停用词，会把把第一行去掉
+with open(fin, 'r', encoding='utf-8') as f:
+    reader = csv.reader(f)
+    for line in reader:
+        line[2] = ltp_separate_word(line[2])
+#        去空行
+        if len(line[2])==0:
+            continue
+        with open(fout, 'a', encoding='utf-8-sig', newline="") as nf:
+            writer = csv.writer(nf)
+            writer.writerow(line)
+end_time = time.clock()
+print("处理结束：" + fout)
+print("处理时间：" + str(end_time - start_time))
+# ltp 13s 去停用词好像没有变慢？？+1s 50W 347s
+segmentor.release()
 
 # sentence="???熊大熊二吃屎啊???"
 # 中科院分词-自己去掉结尾的语气词和多余的标点符号(... !!!) 细粒度最高 但某些情况下自己会删掉一些文本
