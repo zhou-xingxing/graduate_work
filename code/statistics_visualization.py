@@ -71,7 +71,7 @@ def draw_danmu_num(time_data,num_data):
 #draw_danmu_num(new_time_data,num_data)    
     
     
-
+#统计词频
 def cal_danmu_freq():
     #加载弹幕分词聚合数据
     word=pd.read_csv(r'../data/st_jieba_cleaned_room36252danmu_500000.csv',header=None)
