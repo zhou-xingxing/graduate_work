@@ -56,6 +56,7 @@ def danmu_time_word():
 #     new_time_data.append(i)
 # num_data=danmu_num[1].tolist()
 
+#画弹幕数量时间分布图
 def draw_danmu_num(time_data,num_data):
     page = Page()
     bar = Bar("弹幕数量分布图","2020-01-27",title_color='black', title_pos='center',width=1000)
@@ -108,13 +109,27 @@ def cal_danmu_freq():
 #    return wd_fre['word'].tolist(),wd_fre['num'].tolist()
 
 
-
-def draw_danmu_wordcloud(word,freq):
-   page=Page()
-   wordcloud = WordCloud("弹幕词云图","2020-01-27 18:50",title_color='black', title_pos='center',width=1000,height=800)
-   wordcloud.add("", word[:50], freq[:50], word_size_range=[45, 90],shape='diamond',word_gap=50,is_more_utils=True)
-   page.add(wordcloud)
-   page.render("danmu_word.html")
+#画弹幕词云图
+def draw_danmu_wordcloud():
+    page=Page()
+        
+    jieba_word=pd.read_csv(r'../data/freq_st_jieba_cleaned_room36252danmu_500000.csv',header=None)
+    jw=jieba_word[0].tolist()
+    jf=jieba_word[1].tolist()
+  
+    wordcloud1 = WordCloud("弹幕词云图","jieba",title_color='black', title_pos='center',width=1000,height=800)
+    wordcloud1.add("", jw[:50], jf[:50], word_size_range=[45, 90],shape='diamond',word_gap=50,is_more_utils=True)
+    page.add(wordcloud1)
+    
+    ltp_word=pd.read_csv(r'../data/freq_st_ltp_cleaned_room36252danmu_500000.csv',header=None)
+    lw=ltp_word[0].tolist()
+    lf=ltp_word[1].tolist()
+    
+    wordcloud2 = WordCloud("弹幕词云图","ltp",title_color='black', title_pos='center',width=1000,height=800)
+    wordcloud2.add("", lw[:50], lf[:50], word_size_range=[45, 90],shape='diamond',word_gap=50,is_more_utils=True)
+    page.add(wordcloud2)
+   
+    page.render("danmu_word.html")
 
 
 #加载词频数据
@@ -122,7 +137,9 @@ def draw_danmu_wordcloud(word,freq):
 #
 #draw_danmu_wordcloud(word,freq) 
 
-cal_danmu_freq()
+#cal_danmu_freq()
+
+draw_danmu_wordcloud()
     
     
     

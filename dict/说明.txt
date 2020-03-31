@@ -1,9 +1,37 @@
+dyemot.txt-------------斗鱼自带表情代码
+equipment_name.txt-----爬取游戏装备名词典
+hero_name.txt----------爬取英雄名词典
+game_word.txt----------游戏专业术语词典（由搜狗词库和上述游戏装备、英雄名词典组成）
+self_stopwords.txt-----停用词表（基于哈工大，做了筛选）
+self_degree.txt--------程度词表（基于知网程度词）
+self_not.txt-----------否定词表（源于网络）
+
+弹幕新词记录.txt-------总结常见网络词+弹幕词（参考小鸡词典）
+self_dict.txt----------自定义分词词典（弹幕新词+游戏专业术语）
+self_sentiment.txt-----弹幕新词情感词典（源于弹幕新词）
+self_positive_dict.txt-自定义正面情感词典（基础情感词典+弹幕新词情感词典）
+self_negative_dict.txt-自定义负面情感词典（基础情感词典+弹幕新词情感词典）
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 如果发现了弹幕新词，先加到弹幕新词记录.txt里，如果该新词是情感词，则加入self_sentiment.txt
 
 self_dict=弹幕新词记录+game_word+dyemot，new_positive_dict+new_negative_dict <- self_sentiment
 
-game_word=搜狗词库+hero_name+equipment_name
+game_word=搜狗词库+hero_name+equipment_name+自整理
 
 stopwords 助词代词介词特殊符号
 
-最后所有的词典都要检查一下 避免交叉
+最后所有的词典都要检查一下 避免交叉（情感词和程度副词和否定词）
+自定义词典这种：要不断更新（可能用到后续添加的各种词典）  各种词典还有交叉（程度词、否定词和情感词不能有交叉）
