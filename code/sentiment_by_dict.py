@@ -7,7 +7,7 @@ Created on Tue Mar 31 18:46:50 2020
 
 #基于词典的情感分析
 import jieba
-import os
+import os,time
 from pyltp import Segmentor
 from data_cleaning import *
 from langconv import *
@@ -84,7 +84,7 @@ def sentence_score(seg_result):
     
     for i in range(0,len(seg_result)):        
         if seg_result[i] in pos_dict:
-            print('pos:',seg_result[i])
+#            print('pos:',seg_result[i])
             tmp=1
 #            向前查1-2个词
             for j in [1,2]:
@@ -111,7 +111,7 @@ def sentence_score(seg_result):
                         continue
             pos_score+=tmp
         elif seg_result[i] in neg_dict:
-            print('neg:',seg_result[i])
+#            print('neg:',seg_result[i])
             tmp=1
 #            向前查1-2个词
             for j in [1,2]:
@@ -151,38 +151,60 @@ def sentiment_result(sentence):
     sentence=danmu_clean(sentence)
 #    特殊处理两种情况
     if sentence=='???':
-        print('负面')
-        return
+#        print('负面')
+        jieba_res=-1
+        ltp_res=-1
+        return (jieba_res,ltp_res)  
     if sentence=='!!!':
-        print('正面')
-        return
+#        print('正面')
+        jieba_res=1
+        ltp_res=1
+        return (jieba_res,ltp_res)  
     if len(sentence)==0 or sentence==',' or sentence=='.':
-        print('中性')
-        return
+#        print('中性')
+        jieba_res=0
+        ltp_res=0
+        return (jieba_res,ltp_res)  
     
     
     jieba_list=jieba_word(sentence)
     ltp_list=ltp_word(sentence)
     
-    print('jieba_list:',jieba_list)
-    print('ltp_list:',ltp_list)
+#    print('jieba_list:',jieba_list)
+#    print('ltp_list:',ltp_list)
     
     sentiment_jieba=sentence_score(jieba_list)
     sentiment_ltp=sentence_score(ltp_list)
     
+#    if sentiment_jieba>0:
+#        print('jieba:','socre',sentiment_jieba,'class','正面')
+#    elif sentiment_jieba<0:
+#        print('jieba:','socre',sentiment_jieba,'class','负面')
+#    else:
+#        print('jieba:','socre',sentiment_jieba,'class','中性')
+#        
+#    if sentiment_ltp>0:
+#        print('ltp:','socre',sentiment_ltp,'class','正面')
+#    elif sentiment_ltp<0:
+#        print('ltp:','socre',sentiment_ltp,'class','负面')
+#    else:
+#        print('ltp:','socre',sentiment_ltp,'class','中性')    
+    
     if sentiment_jieba>0:
-        print('jieba:','socre',sentiment_jieba,'class','正面')
+        jieba_res=1
     elif sentiment_jieba<0:
-        print('jieba:','socre',sentiment_jieba,'class','负面')
+        jieba_res=-1
     else:
-        print('jieba:','socre',sentiment_jieba,'class','中性')
+        jieba_res=0
         
     if sentiment_ltp>0:
-        print('ltp:','socre',sentiment_ltp,'class','正面')
+        ltp_res=1
     elif sentiment_ltp<0:
-        print('ltp:','socre',sentiment_ltp,'class','负面')
+        ltp_res=-1
     else:
-        print('ltp:','socre',sentiment_ltp,'class','中性')    
+        ltp_res=0
+    
+    return (jieba_res,ltp_res)    
 
 #按时间段判断情感
 def sentiment_fragment(sentiment_score_list):
@@ -191,9 +213,28 @@ def sentiment_fragment(sentiment_score_list):
 
 
 
-
-sentence="ag也太垃圾了吧，md吃屎"
-sentiment_result(sentence)
+#❤️
+#❤ 这两种红心不一样   
+#sentence="❤️"
+#i,j=sentiment_result(sentence)
+#print(i,j)
+    
+test_data=pd.read_csv(r'../data/test300.csv')
+print('测试数量：',len(test_data))
+jieba_flag=[]
+ltp_flag=[]
+start_time=time.clock()
+for index,row in test_data.iterrows():
+    danmu=str(row['danmu'])
+    jieba_res,ltp_res=sentiment_result(danmu)
+#    print(jieba_res,ltp_res)
+    jieba_flag.append(jieba_res)
+    ltp_flag.append(ltp_res)
+end_time=time.clock()
+print('测试用时：',end_time-start_time)
+test_data['jieba']=jieba_flag
+test_data['ltp']=ltp_flag
+test_data.to_csv(r'../data/test300_result.csv',index=None)
 
 
 segmentor.release()    
