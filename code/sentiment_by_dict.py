@@ -192,7 +192,7 @@ def sentiment_fragment(sentiment_score_list):
 
 
 
-sentence="ag也太垃圾了吧，爷吐了"
+sentence="ag也太垃圾了吧，md吃屎"
 sentiment_result(sentence)
 
 

@@ -6,7 +6,7 @@ Created on Sun Mar 29 16:38:46 2020
 """
 #扩展情感词典
 import pandas as pd
-import os
+import os,re,requests
 from pyltp import Postagger
 import jieba.posseg as pseg
 
@@ -123,4 +123,3 @@ def remove_by_wordclass():
     new_candidate=pd.DataFrame(new_candidate)
     new_candidate.to_csv(r'../data/new_candidate.csv',header=None,index=None)
 
-    
