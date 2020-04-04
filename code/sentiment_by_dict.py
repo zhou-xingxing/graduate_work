@@ -138,11 +138,12 @@ def sentence_score(seg_result):
                         continue
             neg_score+=tmp
     
-    sentiment_score=pos_score-neg_score
-#    如果橘子最后有叹号
+    score=pos_score-neg_score
+#    print('score',score)
+#    如果句子最后有叹号
     if  seg_result[-1]=='!':
-        sentiment_score*=1.5
-    return sentiment_score    
+        score*=1.5
+    return score    
                            
                         
 #输出单条弹幕情感分析结果                        
@@ -215,11 +216,11 @@ def sentiment_fragment(sentiment_score_list):
 
 #❤️
 #❤ 这两种红心不一样   
-#sentence="❤️"
+#sentence="这这个辅助在稳得一匹"
 #i,j=sentiment_result(sentence)
 #print(i,j)
-    
-test_data=pd.read_csv(r'../data/test300.csv')
+#    
+test_data=pd.read_csv(r'../data/test300_result_verify.csv')
 print('测试数量：',len(test_data))
 jieba_flag=[]
 ltp_flag=[]
@@ -234,8 +235,8 @@ end_time=time.clock()
 print('测试用时：',end_time-start_time)
 test_data['jieba']=jieba_flag
 test_data['ltp']=ltp_flag
-test_data.to_csv(r'../data/test300_result.csv',index=None)
-
+test_data.to_csv(r'../data/test300_result_verify.csv',index=None)
+#
 
 segmentor.release()    
     

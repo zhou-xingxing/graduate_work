@@ -50,7 +50,7 @@ def danmu_time_word():
 # danmu_num=pd.read_csv(r'time_count.csv',header=None)
 # time_data=danmu_num[0].tolist()
 # new_time_data=[]
-#只保留时间
+#去除日期信息，只保留时间信息
 # for i in time_data:
 #     i=i.split()[1]
 #     new_time_data.append(i)
