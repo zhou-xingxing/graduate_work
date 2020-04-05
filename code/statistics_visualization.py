@@ -44,33 +44,73 @@ def danmu_time_word():
     time_word=pd.DataFrame(dic)
     time_word.to_csv(r"../code/time_word.csv",header=None,index=None)    
 
-
+#按自定义时间段给弹幕分组
+def danmu_time_frag():
+    data=pd.read_csv(r'../code/cleaned_test_room911_20000.csv')
+    data.columns=['id','time','content']
+    handle_time=lambda x: int(x)
+    data["time"]=data["time"].apply(handle_time)
+        
+    # 按30s进行聚和 加一个新列    
+    fragment=[]
+    frag_num=0
+    start_time=data['time'][0]
+    for index,row in data.iterrows():
+        if row['time']>=start_time and row['time']<start_time+30:
+            fragment.append(frag_num)
+        else:        
+            start_time+=30
+            frag_num+=1
+            while row['time']>=start_time+30:
+                start_time+=30
+                frag_num+=1
+            fragment.append(frag_num)    
+    data['fragment']=fragment    
+  # data["time"]=pd.to_datetime(data.time.values,unit="s",utc=True).tz_convert('Asia/Shanghai').strftime("%Y-%m-%d %H:%M:%S")
+ 
+    data.to_csv(r'../code/frag_cleaned_test_room911_20000.csv',index=None)
+    
+    
 
 #加载弹幕数量聚合数据
-# danmu_num=pd.read_csv(r'time_count.csv',header=None)
-# time_data=danmu_num[0].tolist()
-# new_time_data=[]
-#去除日期信息，只保留时间信息
-# for i in time_data:
-#     i=i.split()[1]
-#     new_time_data.append(i)
-# num_data=danmu_num[1].tolist()
+data=pd.read_csv(r'../code/frag_cleaned_test_room911_20000.csv')
+time_group=data.groupby('fragment')
+time_list=[]
+num_list=[]
+for gn,gl in time_group:
+    time_flag=gl['time'].tolist()[0]
+#只保留时间信息
+    time_flag=time_flag.split()[1]
+    time_list.append(time_flag)
+    num_list.append(len(gl))
+    
+#加载弹幕情感聚合数据
+senti_data=pd.read_csv(r'../code/senti_frag_cleaned_test_room911_20000.csv')
+sum_score=senti_data['sum_score'].tolist()
+avg_score=senti_data['avg_score'].tolist()
+    
 
 #画弹幕数量时间分布图
-def draw_danmu_num(time_data,num_data):
+def draw_danmu_num(time_data,num_data,sum_data,avg_data):
     page = Page()
     bar = Bar("弹幕数量分布图","2020-01-27",title_color='black', title_pos='center',width=1000)
     bar.add("弹幕数量", time_data, num_data, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
     page.add(bar)
     
-    line = Line("弹幕数量分布图","2020-01-27",title_color='black', title_pos='center',width=1000)
-    line.add("弹幕数量", time_data, num_data, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
-    page.add(line)
-    page.render("danmu_num.html")
+    bar = Bar("弹幕情感均值分布图","2020-01-27",title_color='black', title_pos='center',width=1000)
+    bar.add("弹幕情感均值", time_data, avg_data, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
+    page.add(bar)
     
-        
-#draw_danmu_num(new_time_data,num_data)    
+    bar = Bar("弹幕情感总和分布图","2020-01-27",title_color='black', title_pos='center',width=1000)
+    bar.add("弹幕情感总和", time_data, sum_data, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
+    page.add(bar)
     
+    page.render("每30s弹幕数据.html")
+            
+draw_danmu_num(time_list,num_list,sum_score,avg_score)    
+
+
+
     
 #统计词频
 def cal_danmu_freq():
@@ -139,7 +179,7 @@ def draw_danmu_wordcloud():
 
 #cal_danmu_freq()
 
-draw_danmu_wordcloud()
+#draw_danmu_wordcloud()
     
     
     

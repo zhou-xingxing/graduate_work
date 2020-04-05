@@ -155,27 +155,30 @@ def sentiment_result(sentence):
 #        print('负面')
         jieba_res=-1
         ltp_res=-1
-        return (jieba_res,ltp_res)  
+#        return (jieba_res,ltp_res)  
+        return jieba_res
     if sentence=='!!!':
 #        print('正面')
         jieba_res=1
         ltp_res=1
-        return (jieba_res,ltp_res)  
+#        return (jieba_res,ltp_res)  
+        return jieba_res
     if len(sentence)==0 or sentence==',' or sentence=='.':
 #        print('中性')
         jieba_res=0
         ltp_res=0
-        return (jieba_res,ltp_res)  
+#        return (jieba_res,ltp_res) 
+        return jieba_res
     
     
     jieba_list=jieba_word(sentence)
-    ltp_list=ltp_word(sentence)
+#    ltp_list=ltp_word(sentence)
     
 #    print('jieba_list:',jieba_list)
 #    print('ltp_list:',ltp_list)
     
     sentiment_jieba=sentence_score(jieba_list)
-    sentiment_ltp=sentence_score(ltp_list)
+#    sentiment_ltp=sentence_score(ltp_list)
     
 #    if sentiment_jieba>0:
 #        print('jieba:','socre',sentiment_jieba,'class','正面')
@@ -191,26 +194,32 @@ def sentiment_result(sentence):
 #    else:
 #        print('ltp:','socre',sentiment_ltp,'class','中性')    
     
-    if sentiment_jieba>0:
-        jieba_res=1
-    elif sentiment_jieba<0:
-        jieba_res=-1
-    else:
-        jieba_res=0
-        
-    if sentiment_ltp>0:
-        ltp_res=1
-    elif sentiment_ltp<0:
-        ltp_res=-1
-    else:
-        ltp_res=0
+#    if sentiment_jieba>0:
+#        jieba_res=1
+#    elif sentiment_jieba<0:
+#        jieba_res=-1
+#    else:
+#        jieba_res=0
+#        
+#    if sentiment_ltp>0:
+#        ltp_res=1
+#    elif sentiment_ltp<0:
+#        ltp_res=-1
+#    else:
+#        ltp_res=0
     
-    return (jieba_res,ltp_res)    
+#    return (jieba_res,ltp_res)    
+    return sentiment_jieba
 
 #按时间段判断情感
-def sentiment_fragment(sentiment_score_list):
+def sentiment_fragment(danmu_list):
+    sentiment_score_list=[]
+    for i in danmu_list:
+        sentiment_score_list.append(sentiment_result(i))
+            
     avg=sum(sentiment_score_list)/len(sentiment_score_list)
-    return avg
+#返回情感值累积和、平均值
+    return (sum(sentiment_score_list),avg)
 
 
 
@@ -219,24 +228,48 @@ def sentiment_fragment(sentiment_score_list):
 #sentence="这这个辅助在稳得一匹"
 #i,j=sentiment_result(sentence)
 #print(i,j)
-#    
-test_data=pd.read_csv(r'../data/test300_result_verify.csv')
-print('测试数量：',len(test_data))
-jieba_flag=[]
-ltp_flag=[]
-start_time=time.clock()
-for index,row in test_data.iterrows():
-    danmu=str(row['danmu'])
-    jieba_res,ltp_res=sentiment_result(danmu)
-#    print(jieba_res,ltp_res)
-    jieba_flag.append(jieba_res)
-    ltp_flag.append(ltp_res)
-end_time=time.clock()
-print('测试用时：',end_time-start_time)
-test_data['jieba']=jieba_flag
-test_data['ltp']=ltp_flag
-test_data.to_csv(r'../data/test300_result_verify.csv',index=None)
+    
+#测试弹幕
+def test_danmu():    
+    test_data=pd.read_csv(r'../data/test300_result_verify.csv')
+    print('测试数量：',len(test_data))
+    jieba_flag=[]
+    ltp_flag=[]
+    start_time=time.clock()
+    for index,row in test_data.iterrows():
+        danmu=str(row['danmu'])
+        jieba_res,ltp_res=sentiment_result(danmu)
+    #    print(jieba_res,ltp_res)
+        jieba_flag.append(jieba_res)
+        ltp_flag.append(ltp_res)
+    end_time=time.clock()
+    print('测试用时：',end_time-start_time)
+    test_data['jieba']=jieba_flag
+    test_data['ltp']=ltp_flag
+    test_data.to_csv(r'../data/test300_result_verify.csv',index=None)
 #
+#测试时间段弹幕
+def test_danmu_frag():
+#    运行36秒
+    data=pd.read_csv(r'../code/frag_cleaned_test_room911_20000.csv')
+    time_group=data.groupby('fragment')    
+    time_frag=[]
+    score_frag=[]
+    avg_frag=[]
+    start_time=time.clock()
+    for gn,gl in time_group:
+#        以每组第一条弹幕时间为坐标值
+        time_frag.append(gl['time'].tolist()[0])
+        sum_score,avg=sentiment_fragment(gl['content'].tolist())
+        score_frag.append(sum_score)
+        avg_frag.append(avg)
+    end_time=time.clock()
+    print('测试用时：',end_time-start_time)
+    dic={'time_frag':time_frag,'sum_score':score_frag,'avg_score':avg_frag}
+    senti_frag=pd.DataFrame(dic)
+    senti_frag.to_csv(r'../code/senti_frag_cleaned_test_room911_20000.csv',index=None)
+
+#test_danmu_frag()
 
 segmentor.release()    
     
