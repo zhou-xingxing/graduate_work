@@ -85,13 +85,15 @@ for gn,gl in time_group:
     num_list.append(len(gl))
     
 #加载弹幕情感聚合数据
-senti_data=pd.read_csv(r'../code/senti_frag_cleaned_test_room911_20000.csv')
+senti_data=pd.read_csv(r'../code/new_senti_frag_cleaned_test_room911_20000.csv')
 sum_score=senti_data['sum_score'].tolist()
 avg_score=senti_data['avg_score'].tolist()
+pos_score=senti_data['pos_score'].tolist()
+neg_score=senti_data['neg_score'].tolist()
     
 
 #画弹幕数量时间分布图
-def draw_danmu_num(time_data,num_data,sum_data,avg_data):
+def draw_danmu_num(time_data,num_data,sum_data,avg_data,pos_data,neg_data):
     page = Page()
     bar = Bar("弹幕数量分布图","2020-01-27",title_color='black', title_pos='center',width=1000)
     bar.add("弹幕数量", time_data, num_data, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
@@ -105,9 +107,17 @@ def draw_danmu_num(time_data,num_data,sum_data,avg_data):
     bar.add("弹幕情感总和", time_data, sum_data, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
     page.add(bar)
     
-    page.render("每30s弹幕数据.html")
+    bar = Bar("弹幕正面情感分布图","2020-01-27",title_color='black', title_pos='center',width=1000)
+    bar.add("弹幕正面情感总和", time_data, pos_data, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
+    page.add(bar)
+    
+    bar = Bar("弹幕负面情感总和分布图","2020-01-27",title_color='black', title_pos='center',width=1000)
+    bar.add("弹幕负面情感总和", time_data, neg_data, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
+    page.add(bar)
+    
+    page.render("new_每30s弹幕数据.html")
             
-draw_danmu_num(time_list,num_list,sum_score,avg_score)    
+draw_danmu_num(time_list,num_list,sum_score,avg_score,pos_score,neg_score)    
 
 
 

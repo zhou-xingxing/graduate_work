@@ -173,10 +173,10 @@ def sentiment_result(sentence):
     
     jieba_list=jieba_word(sentence)
 #    ltp_list=ltp_word(sentence)
-    
+#    
 #    print('jieba_list:',jieba_list)
 #    print('ltp_list:',ltp_list)
-    
+#    
     sentiment_jieba=sentence_score(jieba_list)
 #    sentiment_ltp=sentence_score(ltp_list)
     
@@ -193,7 +193,7 @@ def sentiment_result(sentence):
 #        print('ltp:','socre',sentiment_ltp,'class','负面')
 #    else:
 #        print('ltp:','socre',sentiment_ltp,'class','中性')    
-    
+#    
 #    if sentiment_jieba>0:
 #        jieba_res=1
 #    elif sentiment_jieba<0:
@@ -214,21 +214,28 @@ def sentiment_result(sentence):
 #按时间段判断情感
 def sentiment_fragment(danmu_list):
     sentiment_score_list=[]
+    sentiment_pos_score=[]
+    sentiment_neg_score=[]
     for i in danmu_list:
-        sentiment_score_list.append(sentiment_result(i))
+        score=sentiment_result(i)
+        sentiment_score_list.append(score)
+        if score>0:
+            sentiment_pos_score.append(score)
+        if score<0:
+            sentiment_neg_score.append(score)
             
     avg=sum(sentiment_score_list)/len(sentiment_score_list)
-#返回情感值累积和、平均值
-    return (sum(sentiment_score_list),avg)
+#返回情感值累积和、平均值、正向和、负向和
+    return (sum(sentiment_score_list),avg,sum(sentiment_pos_score),sum(sentiment_neg_score))
 
 
 
 #❤️
 #❤ 这两种红心不一样   
-#sentence="这这个辅助在稳得一匹"
+#sentence="主播太大气了"
 #i,j=sentiment_result(sentence)
 #print(i,j)
-    
+#    
 #测试弹幕
 def test_danmu():    
     test_data=pd.read_csv(r'../data/test300_result_verify.csv')
@@ -256,20 +263,25 @@ def test_danmu_frag():
     time_frag=[]
     score_frag=[]
     avg_frag=[]
+    pos_frag=[]
+    neg_frag=[]
     start_time=time.clock()
     for gn,gl in time_group:
 #        以每组第一条弹幕时间为坐标值
         time_frag.append(gl['time'].tolist()[0])
-        sum_score,avg=sentiment_fragment(gl['content'].tolist())
+        sum_score,avg,pos_score,neg_score=sentiment_fragment(gl['content'].tolist())
+        
         score_frag.append(sum_score)
         avg_frag.append(avg)
+        pos_frag.append(pos_score)
+        neg_frag.append(neg_score)
     end_time=time.clock()
     print('测试用时：',end_time-start_time)
-    dic={'time_frag':time_frag,'sum_score':score_frag,'avg_score':avg_frag}
+    dic={'time_frag':time_frag,'sum_score':score_frag,'avg_score':avg_frag,'pos_score':pos_frag,'neg_score':neg_frag}
     senti_frag=pd.DataFrame(dic)
-    senti_frag.to_csv(r'../code/senti_frag_cleaned_test_room911_20000.csv',index=None)
+    senti_frag.to_csv(r'../code/new_senti_frag_cleaned_test_room911_20000.csv',index=None)
 
-#test_danmu_frag()
+test_danmu_frag()
 
 segmentor.release()    
     
