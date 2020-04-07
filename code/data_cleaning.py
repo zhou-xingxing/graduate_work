@@ -42,7 +42,9 @@ def sim_replace(s):
     s = re.sub('(666+)', '666', s)
     # 表示一种回应
     s = re.sub('(^1+$)', '111', s)
+    s = re.sub('(^2+$)', '222', s)
     s = re.sub('(111+)', '111', s)
+    s = re.sub('(222+)', '222', s)
     # 777在台湾地区和666相似
     s = re.sub('(^7+$)', '777', s)
     s = re.sub('(777+)', '777', s)
@@ -83,7 +85,7 @@ def sim_replace(s):
     return s
 
 
-#print(sim_replace('!!!不是吧'))
+#print(sim_replace('22222222'))
 
 
 with open(r"../dict/dyemot.txt", 'r')as f:
@@ -110,13 +112,13 @@ def emoji_replace(s):
 
     return s
 
-#test_str = "[emot:dy101][emot:dy111]❤❤❤❤❤❤💩💩💩💩💩💩🎉🎉🎉🎉🎉🎉"
+#test_str = "[emot:dy101][emot:dy111]❤️❤❤❤❤❤❤💩💩💩💩💩💩🎉🎉🎉🎉🎉🎉"
 #print(emoji_replace(test_str))
 
 # 开始处理
 # 以此文件的处理比例估算，可以减少1%的数据
-#fin = "../data/room36252danmu_500000.csv"
-#fout = "../data/cleaned_room36252danmu_500000.csv"
+#fin = "../data/room36252danmu0318.csv"
+#fout = "../data/cleaned_room36252danmu0318.csv"
 #print("打开：" + fin)
 #start_time = time.clock()
 #with open(fin, 'r', encoding='utf-8') as f:
@@ -137,3 +139,4 @@ def emoji_replace(s):
 #print("处理结束：" + fout)
 #print("处理时间：" + str(end_time - start_time))
 # 50W 394s 497441/500000=99.5%
+# 23W 188s 
