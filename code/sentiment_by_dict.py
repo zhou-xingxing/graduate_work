@@ -84,7 +84,7 @@ def sentence_score(seg_result):
     
     for i in range(0,len(seg_result)):        
         if seg_result[i] in pos_dict:
-#            print('pos:',seg_result[i])
+            print('pos:',seg_result[i])
             tmp=1
 #            向前查1-2个词
             for j in [1,2]:
@@ -111,7 +111,7 @@ def sentence_score(seg_result):
                         continue
             pos_score+=tmp
         elif seg_result[i] in neg_dict:
-#            print('neg:',seg_result[i])
+            print('neg:',seg_result[i])
             tmp=1
 #            向前查1-2个词
             for j in [1,2]:
@@ -175,7 +175,7 @@ def sentiment_result(sentence):
     jieba_list=jieba_word(sentence)
 #    ltp_list=ltp_word(sentence)
 #    
-#    print('jieba_list:',jieba_list)
+    print('jieba_list:',jieba_list)
 #    print('ltp_list:',ltp_list)
 #    
     sentiment_jieba=sentence_score(jieba_list)
@@ -228,16 +228,16 @@ def sentiment_fragment(danmu_list):
     avg=sum(sentiment_score_list)/num
 #返回情感值累积和、平均值、正向和、负向和
 #    return (sum(sentiment_score_list),avg,sum(sentiment_pos_score),sum(sentiment_neg_score))
-#返回情感均值、正向情感均值、正向弹幕比
-    return  (avg,sum(sentiment_pos_score)/num,len(sentiment_pos_score)/num)  
+#返回情感均值、正面情感均值、正面弹幕比、负面情感均值、负面弹幕比
+    return  (avg,sum(sentiment_pos_score)/num,len(sentiment_pos_score)/num,sum(sentiment_neg_score)/num,len(sentiment_neg_score)/num)  
 
 
 
 #❤️
 #❤ 这两种红心不一样   
-#sentence="好好好"
-#i=sentiment_result(sentence)
-#print(i)
+sentence="别喷了 搞笑 有点道理 有点牛 这他妈打的什么 有点水 水友 放水 我想喝水"
+i=sentiment_result(sentence)
+print(i)
 #    
 #测试弹幕
 def test_danmu():    
@@ -289,57 +289,44 @@ def test_danmu_frag():
 
 #为时间段加特征
 def feature_danmu_frag():
-#    200s
-    data=pd.read_csv(r'../data/hasflag_final_room36252danmu0318.csv') 
+#    180s
+    data=pd.read_csv(r'../data/room36252/new_flagfeature_final_room36252danmu0318.csv') 
     avg_ls=[]
     pos_avg_ls=[]
     pos_prop_ls=[]
+    neg_avg_ls=[]
+    neg_prop_ls=[]
     start_time=time.clock()
     for index,row in data.iterrows():
 #        print(row['danmu'],type(row['danmu']))
-        avg,pos_avg,pos_prop=sentiment_fragment(eval(row['danmu']))
+        avg,pos_avg,pos_prop,neg_avg,neg_prop=sentiment_fragment(eval(row['danmu']))
         
         avg_ls.append(avg)
         pos_avg_ls.append(pos_avg)
         pos_prop_ls.append(pos_prop)
+        neg_avg_ls.append(neg_avg)
+        neg_prop_ls.append(neg_prop)
     
     end_time=time.clock()
     print('测试用时：',end_time-start_time)
     data['avg_score']=avg_ls
     data['pos_avg_score']=pos_avg_ls
     data['pos_proportion']=pos_prop_ls
+    data['neg_avg_score']=neg_avg_ls
+    data['neg_proportion']=neg_prop_ls
     
-    data.to_csv(r'../data/hasflagfeature_final_room36252danmu0318.csv',index=None)
+    data.to_csv(r'../data/room36252/new_flagfeature_final_room36252danmu0318.csv',index=None)
     
-#    fin = "../data/hasflag_final_room36252danmu0318.csv"
-#    fout = "../data/hasflagfeature_final_room36252danmu0318.csv"
-#    print("打开：" + fin)
-#    start_time = time.clock()
-#    with open(fin, 'r', encoding='utf-8') as f:
-#        reader = csv.reader(f)
-#        for line in reader:
-#            line[2] = symbol_replace(line[2])
-#            if len(line[2]) == 0 or line[2] == ',' or line[2] == '.':
-#                continue
-#            else:
-#                line[2] = tradition2simple(line[2])
-#                line[2] = sim_replace(line[2])
-#                line[2] = emoji_replace(line[2])
-#            with open(fout, 'a', encoding='utf-8-sig', newline="") as nf:
-#    #            如果有逗号，会自动加引号
-#                writer = csv.writer(nf)
-#                writer.writerow(line)
-#    end_time = time.clock()
-#    print("处理结束：" + fout)
-#    print("处理时间：" + str(end_time - start_time))
     
     
         
 #feature_danmu_frag()
-    
-test_list=['眼镜', '电线杆是啥', '谢谢办卡', '葛大爷', '???', '???', '你能不能早点奥日啊', '哈哈哈', '666', 'fly上', '刺痛好了吗', '嗯嗯?', '你眼睛去哪了', 'ag加油,ag加油', '???', '噗', '???', '我呵呵你', '???', '哈哈哈', '国服第一?哈哈哈', '什么第一', '???', '巅峰吧!我的快乐源泉', '???', '???', '???', '国服?', '大家为啥都喜欢奥日', '打到12点怎么办', '???', '国服第几?', '???', '???', '注意眼睛啊葛大爷', '国?', '哈哈哈', '???', '???', '???', '???', '你?', '???', '???', '???', '???', '???', '什么第一?', '梦里啥都有', '什么英雄', '国服哈哈哈', '奥日是啥', '???', '???', '你闹呢?', '国服?', '倒数第一?', '说的跟真的似的', '???', '敢不敢睁开眼说话', '醒醒', '痛痛好了', '?.?', '还没醒?', '别说梦话', '???', '???', '就你?', '你膨胀了', '???', '???', '国服第一?', '?什么', '国一扁鹊', '大可不必', '喝了几杯?', '???', '国一演员', '???', '几个菜,喝成这样', '醒醒?', '???', '竞猜', '你在逗我', '???', '白日梦', '国服扁鹊?', '???', '扁鹊吧', '?你?', '卡了?', '???', '现在还没到晚上', '我来晚了', '.?', '竞猜', '???', '几个菜啊', '...?', '搞得跟真的一样', '刺痛家旁边电线杆子被撞是真的吗?', '???', '哪个英雄', '国服倒数第一吗', '国服第一.?我没听错', '国服第一扁鹊?', '???', '梦里面什么都有?', '飞牛的冠军皮肤什么时候出?', '这么早', '???', '醒醒', '???', '小问号', '国服扁鹊', '???', '太难了太难了', '国服扁鹊?', '哪个国服', '大型问号现场', '但凡有粒花生米', '真的好了吗', '倒数第一?', '国服倒第一?', '醉成这样', '???', '咋闭眼了', '扁鹊嘛', '你改行直播奥日吧', '???', '醒醒', '赞一下?朋友们', '国服演员', '电线杆子好了吗', '扁鹊', '国服第一非你莫属', '刺痛怎么样了', '目标也不能不切实际啊', '我笑了', '???', '扁鹊吗', '星光荡开宇宙  fly闪耀其中', '小奶妈／?', '鹅鹅鹅鹅鹅', '不信', '葛大爷今天好早啊', '第一扁鹊?', '你早了一个小时,我网课还没上完你', '国服第一摇', '扁鹊还要冲吗?', '乔戈里峰', '国服第一扁鹊', '醒醒', '我是今天直播间签到第666名,给我点个赞吧~', '大白天做什么梦', '痛痛的网络好了么', '国服扁鹊', '已经是国服第一扁鹊了啊', '咋睡过去了?', '发一下首发名单', '哈哈哈', '国服第一扁鹊吗', '昨晚几斤', '国服倒一', '刺痛怎么了?', 'hurt家网还健在嘛', '刺痛今晚还能上吗', '[666]', '哈哈哈', '什么英雄?', '达摩', '只有目标没有实力哈哈哈', '扁鹊倒是稳了', '几个菜?', '好神奇的东西', '倒数第一', '国服第一啥啊', '国服第一扁鹊?', '但凡多几粒花生米', '为什么现在领不到40鱼丸了', '好的  人要有梦想[点赞]', '今天那么早', '越得不到越想要呗', '大中午喝多了', '痛痛的电线杆子修好了吗', '明天比赛几点开始,有谁知道', '太扯了', '哈哈哈', '倒数第一', '233', '优秀', '痛痛电线杆修好了吗锅锅', '笑死', '竞猜竞猜竞猜竞猜竞猜竞猜竞猜竞猜竞猜竞猜', '国服第一扁鹊', '国服扁鹊', '刺痛好了好了', '你那泡脚的呢', '竞猜在哪啊']
-avg,pos_avg,pos_pro=sentiment_fragment(test_list)
-print(avg,pos_avg,pos_pro)    
+
+#test_list=['有道理呀', '许诺今天有点下饭', '我去', 'ag 3:0 qg不解释', '张飞一点意识没有  早大就可以了', '用薪创造快乐.', '张飞肯定以为可以直接杀啊', '我觉得770开团辅助玩的不好,但是张飞玩的比这个绝对强一点吧', '不想喷,辅助还是有问题', 'ag冲冲冲', '打野吧,让buff', 'qg买了最初?', '我要得一儿', '黑暴快哭了', 'qg辅助没一个好的', '可以可以', '张飞大狂铁闪换了一个黄忠闪', '为什么九分钟就有小龙', '没有大招的张飞没办法抢龙 所以想留', '谁能想到啊?', 'qg 加油', '喷许诺的事项上九月吗?', '太乙意识很好也', '带节奏的出去,没人叫你看', '马克经济多', '哔哔辅助干嘛', '你到底是那边的', '轻点喷,你们qg辅助少,喷走了就没了', '许诺以为fly能杀没问题啊啊啊', '这个不抢人头好不好', '玩过辅助?在这比比?', '哇', '刺痛争点气啊', '反着买,别墅靠海', '上帝视野牛逼?', '一动不动似王八', '233', '许诺就是snow', '哈哈哈啊哈哈哈', '一动不动似王八', '赫尔特的电线杆是你撞的吧', '我刚才也以为狂铁能杀啊,为什么要放大', '刺痛家没有网', '哈哈哈', '带节奏关你吊事,自己屏蔽弹幕', '马可经济好高', '太难了太难了', '开个弱化进去就能顶住', 'qg狗急了?', '人家愿意说,没办法 @awyj86985：许诺怎么了,喷子有病吧', '不要带节奏', '唉', '这把感觉qg要无了...', '别带许诺节奏.!', '没视野啊', '还以为曜驯龙高手', '所以为什么不买最初啊?', '末将按的好', '还是fly呀', '总是有些喷子喜欢乱喷 人在每一个主播的直播间里都会见到', '一个边路已经不错了', '哈哈哈', '最初是经济又实惠', '又无了', '哈哈哈', '那就是fly的问题呗', '黄忠起来了要怎么打', '我是真的不懂你们当初为什么不买最初', 'qg打得真气人啊', '有内鬼', 'qg谁在指挥?', 'qg', '然后就被开了', '有道理呀', '你真的秀', '无了啊', '一动不动是王八', 'giao之前在练李白', '我要得一儿', '哇', '别骂张飞 许诺比韭黄好太多了', '你那边的?', '毒奶', '...', '怎么打成这样了', '第二打野', '无了呀', '许诺永远滴神!', '一动不动似王八?', '许诺真的会玩吗', '无了', 'qg全员都很好', '这黄忠打人打得笑死我了', '很不错666啊', '黄忠破晓了啊', '按早了', '总是自己断节奏', '我要得一儿', '毒奶', '两队差距太大了', '开了自动攻击', '飞哥牛逼', '输了啊', '太难了太难了', '张飞以为狂铁最后那一下能打死黄忠,所以大开晚了', '黄忠没了...', '所以就是说是判断失误嘛', '不好打啊', '感觉黄忠cd好大', '刚来,问一下奶的谁', '啊啊啊', '毒奶降临', 'qg是不是没打过顺风啊', '我吐了.听你的压了qg', '哈哈哈', '有内鬼', '毒奶', '刺痛李白?', '毒奶哈哈哈', '线也差,龙也没,打毛', 'qg没了', '黄忠经济起来了', '辅助不行', '不会被零封吧', '无了呀', '还好我压的ag', '跟我念:qg这把不好打', '毒奶', '别带节奏', '打毛线', 'qga', '唉', '你出钱,人机ag先下手@a薄荷糖13248我就不懂你们为什', '❤❤❤', '啊啊啊', 'qg是真的菜啊', '你以为?  你牛逼你上?', '别喷了别喷了', '不看了', 'giao之前在练李白', '一动不动似王八', '切不到太难了', '带节奏还有理了?', '我刺痛也可以', '无了', '后裔能站撸黄忠', '可惜看不到基尼了', '为啥给牛拿吕布啊醉了', '要零封了', '指挥没思路', '年少转身拿蓝', '有道理呀', '王昭君打黄忠很好打啊', '国服扁鹊', '无人能近身', '输了啊', '别tm带节奏', 'qg加油', '怂  烦死了', '无了无了', '菜逼扣鸡🐔', '你咋这么逗乐呢', '买个纯净苍穹', '黛打打的赢搞笑', '又无了', '真:毒奶', '黄忠经济很高', '请问哪个射手现在不变态', '带许诺节奏的是想上韭黄🐎?', '毒奶是不是', '喷子又来了', '完了', 'bo几', '哈哈哈', '破产了', '两炮轰死一个c😂', 'qg不行,气死了', '老兵不老', '刺痛李白?', 'mua～', 'hurt加油!干他!', '梦奇可以打黄忠吗', '别奶了!', '许诺辅助不行', '起来就是黄三炮', '我感觉是狂铁的问题', '还好我压的ag', '好紧张', '上杰杰吧', '一直都认为许诺辅助一般', '破晓了很难顶', '司马懿虐杀', '婉儿偷袭可以', '黄忠经济可以的', '很不错666啊', '后羿已经没黄忠厉害了', '黄忠架炮距离太远没法头像锁定', '黄忠你被奶了,快死', '3比零结束呗?', '老夫子吊着打', 'skr skr skr skr', '怎么感觉又要无了', '黄7泡哈哈哈', '黄忠后期超猛', '❤❤❤', '嘻嘻', '喷许诺的是想上九月还是770?', '天天喷许诺,那上770九月吧,看你们是输是赢赖', 'giao不行打不了野核', '为什么qg玩黄忠没有这种感觉', '会换770吗', '鬼英雄哈哈哈', 'qg好菜啊', '还在大庄,按纯净苍穹', '慌的一b', '所以笑影以前叫汤汤吗', '无了呀', '毒奶', 'giao之前在练李白', '链接qg', '看得我心跳', '二营长把我的意大利炮拿来', '沟通问题 别说了', '我都说了qg帮3:0带走了', '要被零封了', '许诺总是断节奏啊', '这谁顶得住啊', 'qg怎么没那么厉害了', '黄忠的发育曲线很不线性', '又赔了', '为啥给牛拿吕布啊醉了', '毒奶', '暴君击杀ag哈哈哈', '别奶了']
+#
+#
+#avg,pos_avg,pos_pro,neg_avg,neg_pos=sentiment_fragment(test_list)
+#print(avg,pos_avg,pos_pro,neg_avg,neg_pos)    
 
 
 segmentor.release()    
