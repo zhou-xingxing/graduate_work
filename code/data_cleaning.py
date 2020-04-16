@@ -70,9 +70,10 @@ def sim_replace(s):
     s = re.sub('(冲冲冲+)', '冲冲冲', s)
     s = re.sub('(上上上+)', '上上上', s)
     s = re.sub('(秀秀秀+)', '秀秀秀', s)
-    s = re.sub('(恍恍惚惚+)', '哈哈哈', s)
-    s = re.sub('(红红火火+)', '哈哈哈', s)
+    s = re.sub('(恍恍惚惚)+', '哈哈哈', s)
+    s = re.sub('(红红火火)+', '哈哈哈', s)
     s = re.sub('(哈哈+)', '哈哈哈', s)
+    s = re.sub('(大气)+', '大气', s)
     s = re.sub('(…+)', '...', s)
 
     s = re.sub('(\?+)', '?', s)
@@ -85,16 +86,14 @@ def sim_replace(s):
     return s
 
 
-#print(sim_replace('22222222'))
+#print(sim_replace('谢谢老板大气大气大气啊'))
 
 
-with open(r"../dict/dyemot.txt", 'r')as f:
-    emot_dict = eval(f.read())
-    print("表情符号字典加载完毕")
+
 
 
 # 表情替换
-def emoji_replace(s):
+def emoji_replace(s,emot_dict):
     # 斗鱼专属表情
     for i in emot_dict.keys():
         s = re.sub('emot:' + i, emot_dict[i], s)
@@ -113,14 +112,13 @@ def emoji_replace(s):
 
     return s
 
-#test_str = "[emot:dy101][emot:dy111]❤️❤❤❤🚀🚀🚀🚀🚀🚀❤💩💩💩💩💩💩🎉🎉🎉🎉🎉🎉"
-#print(emoji_replace(test_str))
+
 
 # 开始处理
 # 以此文件的处理比例估算，可以减少1%的数据
 def run_data_clean():    
-    fin = "../data/room36252danmu0318.csv"
-    fout = "../data/cleaned_room36252danmu0318.csv"
+    fin = "../data/room36252/room36252danmu0323.csv"
+    fout = "../data/room36252/cleaned_room36252danmu0323.csv"
     print("打开：" + fin)
     start_time = time.clock()
     with open(fin, 'r', encoding='utf-8') as f:
@@ -132,7 +130,7 @@ def run_data_clean():
             else:
                 line[2] = tradition2simple(line[2])
                 line[2] = sim_replace(line[2])
-                line[2] = emoji_replace(line[2])
+                line[2] = emoji_replace(line[2],emot_dict)
             with open(fout, 'a', encoding='utf-8-sig', newline="") as nf:
     #            如果有逗号，会自动加引号
                 writer = csv.writer(nf)
@@ -142,7 +140,15 @@ def run_data_clean():
     print("处理时间：" + str(end_time - start_time))
 # 50W 394s 497441/500000=99.5%
 # 23W 188s 
+    
+    
+if __name__=='__main__':
+    with open(r"../dict/dyemot.txt", 'r')as f:
+        emot_dict = eval(f.read())
+        print("表情符号字典加载完毕")
+#    test_str = "[emot:dy101][emot:dy111]❤️❤❤❤🚀🚀🚀🚀🚀🚀❤💩💩💩💩💩💩🎉🎉🎉🎉🎉🎉"
+#    print(emoji_replace(test_str,emot_dict))
 
-#run_data_clean()
+#    run_data_clean()
 
 
