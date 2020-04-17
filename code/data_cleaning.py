@@ -66,6 +66,7 @@ def sim_replace(s):
     s = re.sub('(啊啊+)', '啊啊啊', s)
     s = re.sub('(略略+)', '略略略', s)
     s = re.sub('(啦啦+)', '啦啦啦', s)
+    s = re.sub('(捞捞+)', '捞捞捞', s)
     s = re.sub('(飞飞飞+)', '飞飞飞', s)
     s = re.sub('(冲冲冲+)', '冲冲冲', s)
     s = re.sub('(上上上+)', '上上上', s)
@@ -74,6 +75,7 @@ def sim_replace(s):
     s = re.sub('(红红火火)+', '哈哈哈', s)
     s = re.sub('(哈哈+)', '哈哈哈', s)
     s = re.sub('(大气)+', '大气', s)
+    s = re.sub('(加油)+', '加油', s)
     s = re.sub('(…+)', '...', s)
 
     s = re.sub('(\?+)', '?', s)
@@ -86,7 +88,7 @@ def sim_replace(s):
     return s
 
 
-#print(sim_replace('谢谢老板大气大气大气啊'))
+#print(sim_replace('谢谢老板大气大气大气啊捞 捞捞'))
 
 
 
@@ -117,8 +119,8 @@ def emoji_replace(s,emot_dict):
 # 开始处理
 # 以此文件的处理比例估算，可以减少1%的数据
 def run_data_clean():    
-    fin = "../data/room36252/room36252danmu0323.csv"
-    fout = "../data/room36252/cleaned_room36252danmu0323.csv"
+    fin = "../data/room911/room911danmu0206.csv"
+    fout = "../data/room911/cleaned_room911danmu0206.csv"
     print("打开：" + fin)
     start_time = time.clock()
     with open(fin, 'r', encoding='utf-8') as f:
@@ -140,6 +142,7 @@ def run_data_clean():
     print("处理时间：" + str(end_time - start_time))
 # 50W 394s 497441/500000=99.5%
 # 23W 188s 
+# 14w 114s
     
     
 if __name__=='__main__':
