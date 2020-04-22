@@ -90,6 +90,7 @@ sum_score=senti_data['sum_score'].tolist()
 avg_score=senti_data['avg_score'].tolist()
 pos_score=senti_data['pos_score'].tolist()
 neg_score=senti_data['neg_score'].tolist()
+neg_score=[i*-1 for i in neg_score]
     
 
 #画弹幕数量时间分布图
@@ -107,12 +108,12 @@ def draw_danmu_num(time_data,num_data,sum_data,avg_data,pos_data,neg_data):
     bar.add("弹幕情感总和", time_data, sum_data, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
     page.add(bar)
     
-    bar = Bar("弹幕正面情感分布图","2020-01-27",title_color='black', title_pos='center',width=1000)
+    bar = Bar("弹幕正面情感总和分布图","2020-01-27",title_color='black', title_pos='center',width=1000)
     bar.add("弹幕正面情感总和", time_data, pos_data, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
     page.add(bar)
     
     bar = Bar("弹幕负面情感总和分布图","2020-01-27",title_color='black', title_pos='center',width=1000)
-    bar.add("弹幕负面情感总和", time_data, neg_data, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
+    bar.add("弹幕负面情感总和", time_data, neg_data, mark_line=['average'],yaxis_max=350,mark_point=['max','min'],legend_pos='right',is_more_utils=True)
     page.add(bar)
     
     page.render("new_每30s弹幕数据.html")
