@@ -118,7 +118,7 @@ def draw_danmu_num(time_data,num_data,sum_data,avg_data,pos_data,neg_data):
     
     page.render("new_每30s弹幕数据.html")
             
-draw_danmu_num(time_list,num_list,sum_score,avg_score,pos_score,neg_score)    
+#draw_danmu_num(time_list,num_list,sum_score,avg_score,pos_score,neg_score)    
 
 
 
