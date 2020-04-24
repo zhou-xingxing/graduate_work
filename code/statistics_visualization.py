@@ -69,28 +69,61 @@ def danmu_time_frag():
   # data["time"]=pd.to_datetime(data.time.values,unit="s",utc=True).tz_convert('Asia/Shanghai').strftime("%Y-%m-%d %H:%M:%S")
  
     data.to_csv(r'../code/frag_cleaned_test_room911_20000.csv',index=None)
+
+#按每分钟对弹幕进行聚合
+def danmu_60s_frag(fin,fout):
+#防刷屏处理    
+    print('已清洗文件：',fin)   
+    day1=pd.read_csv(fin,header=None)
+    day1.columns=['id','time','danmu']
+    day1["time"]=pd.to_datetime(day1.time.values,unit="s",utc=True).tz_convert('Asia/Shanghai').strftime("%Y-%m-%d %H:%M")
+    day1=day1.drop_duplicates(subset=['id','time','danmu'])
+    time_group=day1.groupby('time')
+    print(time_group.size().describe())
+    # 数量限制
+    time_list=[]
+    danmu_list=[]
+    num_list=[]
+    for gn,gl in time_group:
+        num=len(gl)
+#        if num>1500 or num <30:
+#            continue
+        time_list.append(gn)
+        num_list.append(num)
+        danmu_list.append(gl['danmu'].tolist())
+    
+    dic={'time':time_list,'danmu':danmu_list,'num':num_list}
+    new_data=pd.DataFrame(dic)
+#    print(new_data)
+    new_data.to_csv(fout,index=None)
+    print('聚合文件：',fout)  
+    
+fin=r"../data/room911/cleaned_room911danmu0209.csv"
+fout=r"../data/room911/frag_room911danmu0209.csv"
+
+#danmu_60s_frag(fin,fout)
     
     
 
-#加载弹幕数量聚合数据
-data=pd.read_csv(r'../code/frag_cleaned_test_room911_20000.csv')
-time_group=data.groupby('fragment')
-time_list=[]
-num_list=[]
-for gn,gl in time_group:
-    time_flag=gl['time'].tolist()[0]
-#只保留时间信息
-    time_flag=time_flag.split()[1]
-    time_list.append(time_flag)
-    num_list.append(len(gl))
-    
-#加载弹幕情感聚合数据
-senti_data=pd.read_csv(r'../code/new_senti_frag_cleaned_test_room911_20000.csv')
-sum_score=senti_data['sum_score'].tolist()
-avg_score=senti_data['avg_score'].tolist()
-pos_score=senti_data['pos_score'].tolist()
-neg_score=senti_data['neg_score'].tolist()
-neg_score=[i*-1 for i in neg_score]
+##加载弹幕数量聚合数据
+#data=pd.read_csv(r'../code/frag_cleaned_test_room911_20000.csv')
+#time_group=data.groupby('fragment')
+#time_list=[]
+#num_list=[]
+#for gn,gl in time_group:
+#    time_flag=gl['time'].tolist()[0]
+##只保留时间信息
+#    time_flag=time_flag.split()[1]
+#    time_list.append(time_flag)
+#    num_list.append(len(gl))
+#    
+##加载弹幕情感聚合数据
+#senti_data=pd.read_csv(r'../code/new_senti_frag_cleaned_test_room911_20000.csv')
+#sum_score=senti_data['sum_score'].tolist()
+#avg_score=senti_data['avg_score'].tolist()
+#pos_score=senti_data['pos_score'].tolist()
+#neg_score=senti_data['neg_score'].tolist()
+#neg_score=[i*-1 for i in neg_score]
     
 
 #画弹幕数量时间分布图

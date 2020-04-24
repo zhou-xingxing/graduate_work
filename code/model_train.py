@@ -188,22 +188,24 @@ def svm_model_train():
     
 #svm_model_train()   
     
-def svm_model_test():
-    model_save_path = "./model_save/"   
+def svm_model_test(fin,fout):
+    data=pd.read_csv(fin)
+   
+    model_save_path = r"../code/model_save/"   
     save_path_name=model_save_path+"svm_"+"train_model.model"
     svm_clf = joblib.load(save_path_name)
     
-    feature=pd.read_csv(r'../data/ml_danmu_frag.csv')    
-    feature=feature.iloc[:, 2:9]
+    feature=data.iloc[:, 2:8]
     # 标准化
     feature['num']=(feature['num']-feature['num'].mean())/(feature['num'].std())
-    # display(feature)
-    num_group=feature.groupby(['flag'])
-    print(num_group.size())
-    data=np.array(feature)
-    # 划分训练集测试集
-    X,Y=(data[:, 1:7], data[:, 0])  
+    X=np.array(feature)
     label=svm_clf.predict(X)
-    print('准确率',accuracy_score(Y,label))
-#svm_model_test()    
+    data['predict']=label
+    data.to_csv(fout,index=None)
+    print('情感分析：',fout)
+    
+fin=r'../data/room911/feature_frag_room911danmu0209.csv'
+fout=r'../data/room911/senti_feature_frag_room911danmu0209.csv'
+    
+#svm_model_test(fin,fout)    
      

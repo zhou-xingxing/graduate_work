@@ -118,9 +118,9 @@ def emoji_replace(s,emot_dict):
 
 # 开始处理
 # 以此文件的处理比例估算，可以减少1%的数据
-def run_data_clean():    
-    fin = "../data/room911/room911danmu0206.csv"
-    fout = "../data/room911/cleaned_room911danmu0206.csv"
+def run_data_clean(fin,fout):    
+#    fin = "../data/room911/room911danmu0206.csv"
+#    fout = "../data/room911/cleaned_room911danmu0206.csv"
     print("打开：" + fin)
     start_time = time.clock()
     with open(fin, 'r', encoding='utf-8') as f:
@@ -151,7 +151,9 @@ if __name__=='__main__':
         print("表情符号字典加载完毕")
 #    test_str = "[emot:dy101][emot:dy111]❤️❤❤❤🚀🚀🚀🚀🚀🚀❤💩💩💩💩💩💩🎉🎉🎉🎉🎉🎉"
 #    print(emoji_replace(test_str,emot_dict))
-
-#    run_data_clean()
+    fin="../data/room911/room911danmu0209.csv"
+    fout="../data/room911/cleaned_room911danmu0209.csv"
+    
+    run_data_clean(fin,fout)
 
 
