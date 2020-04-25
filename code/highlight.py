@@ -8,10 +8,9 @@ Created on Fri Apr 24 18:06:26 2020
 #高光时刻分析
 import pandas as pd
 import numpy as np
-from pyecharts import Bar,Page,Line,WordCloud,Pie
+from pyecharts import Bar,Page,Line,Pie
 
 #可视化部分-折线图、饼图
-
 def draw_senti(time,num,avg,pos_avg,neg_avg,pos_prop,neg_prop,fout):
 #    数据预处理
     senti_sum=np.multiply(np.array(num),np.array(avg)).tolist()
@@ -78,16 +77,103 @@ def draw_senti(time,num,avg,pos_avg,neg_avg,pos_prop,neg_prop,fout):
     page.render(fout)
     print('echarts：',fout)
     
-draw_fout="room911danmu0209.html"
 
-data=pd.read_csv(r'../data/room911/senti_feature_frag_room911danmu0209.csv') 
-time=data['time'].tolist()
-num=data['num'].tolist()
-avg=data['avg_score'].tolist()
-pos_avg=data['pos_avg_score'].tolist()
-neg_avg=data['neg_avg_score'].tolist()
-pos_prop=data['pos_proportion'].tolist()
-neg_prop=data['neg_proportion'].tolist()
+#加载已预测情感倾向的文件
+def load_data(fin):
+    data=pd.read_csv(fin)
+#    print(len(data))
+#    剔除数量小于30的片段，没有研究意义
+    dele=[]
+    for index,row in data.iterrows():
+        if row['num']<30:
+            dele.append(index)
+    data.drop(index=dele,inplace=True)
+    print(len(data))            
+    time=data['time'].tolist()
+    num=data['num'].tolist()
+    avg=data['avg_score'].tolist()
+    pos_avg=data['pos_avg_score'].tolist()
+    neg_avg=data['neg_avg_score'].tolist()
+    pos_prop=data['pos_proportion'].tolist()
+    neg_prop=data['neg_proportion'].tolist()
+    senti_class=data['predict'].tolist()
+    
+    return time,num,avg,pos_avg,neg_avg,pos_prop,neg_prop,senti_class
 
-draw_senti(time,num,avg,pos_avg,neg_avg,pos_prop,neg_prop,draw_fout)
+def senti_report(time,num,avg,pos_avg,neg_avg,pos_prop,neg_prop,senti_class):
+#数量分析
+    num_pd=pd.Series(num)
+    num_avg=num_pd.mean()
+    print('弹幕数量分布')
+    print(num_pd.describe())
+    
+    #    不同倾向弹幕比例
+    pos_num=np.multiply(np.array(num),np.array(pos_prop)).tolist()
+    pos_num=np.rint(pos_num)
+    neg_num=np.multiply(np.array(num),np.array(neg_prop)).tolist()
+    neg_num=np.rint(neg_num)
+    
+    all_pos_prop=sum(pos_num)/sum(num)
+    all_neg_prop=sum(neg_num)/sum(num)
+    all_mid_prop=1-all_neg_prop-all_pos_prop
+    
+    print('正面弹幕数量：','{:.0f}'.format(sum(pos_num)),'占比：','{:.2%}'.format(all_pos_prop))
+    print('中性弹幕数量：','{:.0f}'.format(sum(num)),'占比：','{:.2%}'.format(all_mid_prop))
+    print('负面弹幕数量：','{:.0f}'.format(sum(neg_num)),'占比：','{:.2%}'.format(all_neg_prop))
+    
+
+    highlight_list=[]
+    fight_list=[]
+    storm_list=[] 
+    negative_list=[]
+    
+    for i in range(len(time)):
+        #   高光时刻 
+        if num[i]>=num_avg and senti_class[i]==1:
+            highlight_list.append(i)
+        #   争议时刻
+        if pos_prop[i]>=0.3 and neg_prop[i]>=0.3:
+            fight_list.append(i)
+        #   弹幕风暴
+        if num[i]>=1000:
+            storm_list.append(i)
+        #   负面时刻
+        if senti_class[i]==-1:
+            negative_list.append(i)
+    
+    print('高光时刻：',str(len(highlight_list))+'个')
+    for i in highlight_list:
+        print(time[i])
+    
+    print('争议时刻：',str(len(fight_list))+'个')
+    for i in fight_list:
+        print(time[i])
+                                    
+    print('负面弹幕警告：',str(len(negative_list))+'个')
+    for i in negative_list:
+        print(time[i])   
+        
+    print('弹幕风暴时刻：',str(len(storm_list))+'个')
+    for i in storm_list:
+        if senti_class[i]==1:
+            print(time[i],'正面')
+        if senti_class[i]==0:
+            print(time[i],'中性')
+        if senti_class[i]==-1:
+            print(time[i],'负面')
+    
+    
+    
+
+if __name__=='__main__':
+    fin=r"../data/room911/senti_feature_frag_room911danmu0209.csv"    
+    time,num,avg,pos_avg,neg_avg,pos_prop,neg_prop,senti_class=load_data(fin)
+   
+#    draw_fout="new_room911danmu0209.html"
+#    draw_senti(time,num,avg,pos_avg,neg_avg,pos_prop,neg_prop,draw_fout)
+    senti_report(time,num,avg,pos_avg,neg_avg,pos_prop,neg_prop,senti_class)
+
+
+
+
     
