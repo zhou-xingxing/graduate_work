@@ -243,7 +243,7 @@ sentence="别骂了 不要脸 给你脸了 别给脸不要脸主播太强了"
 i=sentiment_result(sentence)
 print(i)
 #    
-#测试弹幕
+#测试单条弹幕
 def test_danmu():    
     test_data=pd.read_csv(r'../data/test300_result_verify.csv')
     print('测试数量：',len(test_data))
