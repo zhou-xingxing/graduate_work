@@ -15,6 +15,7 @@ import pandas as pd
 
 # 加载自定义词典
 jieba.load_userdict(r'./dict/self_dict.txt')
+print("加载分词词典完毕")
 
 pos_dict=pd.read_csv(r'./dict/self_positive_dict.txt',header=None)
 pos_dict=pos_dict[0].tolist()

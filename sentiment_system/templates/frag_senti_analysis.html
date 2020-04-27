@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>直播弹幕情感分析系统</title>
+    <title>片段分析结果</title>
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -18,7 +18,7 @@
 <body>
 <div class="container">
 	<div class="row clearfix">
-		<div class="col-md-12 column">
+        <div class="col-md-12 column">
 			<nav class="navbar navbar-default" role="navigation">
 				<div class="navbar-header">
 					 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="/">首页</a>
@@ -31,7 +31,7 @@
                         <li >
 							 <a href="#">数据预处理</a>
 						</li>
-                        <li >
+                        <li class="active">
 							 <a href="/frag_senti">片段分析</a>
 						</li>
                         <li >
@@ -41,34 +41,40 @@
 
 				</div>
 			</nav>
-			<div class="jumbotron well">
-				<h1>
-					直播弹幕情感分析系统
-				</h1>
-                <br/>
-                <ul>
-                    <li>
-                        <h3>
-                            单文本分析：输入单条弹幕，判断其情感倾向
-                        </h3>
-                    </li>
-                    <li>
-                        <h3>
-                             数据预处理：上传弹幕片段原始数据，进行数据清洗和预处理
-                        </h3>
-                    </li>
-                    <li>
-                        <h3>
-					        片段分析：上传预处理后的弹幕片段数据，进行情感监测和高光片段分析
-                        </h3>
-                    </li>
-				    <li>
-                        <h3>
-                            自定义词典：上传用户自定义词典，与系统词典合并
-                        </h3>
-                    </li>
-                </ul>
-			</div>
+        <br/>
+		</div>
+{#        导航栏+标签页 #}
+		<div class="col-md-2 column">
+			<ul class="nav nav-stacked nav-pills">
+
+				<li role="presentation" class="active">
+					 <a href="#num_tab" role="tab" data-toggle="pill">弹幕数量</a>
+				</li>
+				<li role="presentation">
+					 <a href="#score_tab" role="tab" data-toggle="pill">情感总值</a>
+				</li>
+                <li role="presentation">
+					 <a href="#avg_score_tab" role="tab" data-toggle="pill">情感均值</a>
+				</li>
+                <li role="presentation">
+					 <a href="#report_tab" role="tab" data-toggle="pill">分析报告</a>
+				</li>
+
+			</ul>
+		</div>
+		<div class="col-md-10 column">
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="num_tab">弹幕数量</div>
+
+                <div role="tabpanel" class="tab-pane " id="score_tab">情感总值</div>
+
+                <div role="tabpanel" class="tab-pane" id="avg_score_tab">情感均值</div>
+
+                <div role="tabpanel" class="tab-pane" id="report_tab">
+                    <a href="/frag_senti_report" class="btn btn-primary " role="button" >下载分析报告</a>
+                </div>
+
+            </div>
 		</div>
 	</div>
 </div>

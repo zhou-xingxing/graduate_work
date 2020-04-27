@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>弹幕片段分析</title>
+    <title>自定义词典</title>
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -31,10 +31,10 @@
                         <li >
 							 <a href="#">数据预处理</a>
 						</li>
-                        <li class="active">
+                        <li >
 							 <a href="/frag_senti">片段分析</a>
 						</li>
-                        <li >
+                        <li class="active">
 							 <a href="/dict_page">自定义词典</a>
 						</li>
 					</ul>
@@ -45,29 +45,44 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3>
-                        上传弹幕片段文件
+                        上传自定义词典（可选）
                     </h3>
                 </div>
                 <div class="panel-body">
                     <div style="display:block;margin:0 auto">
-                        <form id="form1" method="post" action="/frag_senti_upload" enctype="multipart/form-data">
+                        <form id="form1" method="post" action="/user_dict_upload" enctype="multipart/form-data">
                             <div class="form-group">
-                                <input id="File1" type="file" name="myfile" class="btn btn-default"/>  <!--后台代码中获取文件是通过form的name来标识的-->
-                                <p class="help-block"> 只接受csv文件</p>
-                                <div class="col-md-6" style="text-align:center">
-                                    <button type="submit" class="btn btn-primary " >上传</button>
-                                </div>
-                                <div class="col-md-6" style="text-align:center">
-                                    <a href="/frag_senti_analysis" class="btn btn-primary " role="button" >开始分析</a>
+                                <label>
+                                    <h4>自定义——分词词典</h4>
+                                </label>
+                                <input id="File1" type="file" name="fenci_dict" class="btn btn-default"/>  <!--后台代码中获取文件是通过form的name来标识的-->
+                                <br/>
+                                <label>
+                                    <h4>自定义——正面词词典</h4>
+                                </label>
+                                <input id="File2" type="file" name="pos_dict" class="btn btn-default"/>  <!--后台代码中获取文件是通过form的name来标识的-->
+                                <br/>
+                                <label>
+                                    <h4>自定义——负面词词典</h4>
+                                </label>
+                                <input id="File3" type="file" name="neg_dict" class="btn btn-default"/>  <!--后台代码中获取文件是通过form的name来标识的-->
+                                <br/>
+                                <div  style="text-align:center">
+                                    <button type="submit" class="btn btn-primary" >上传</button>
                                 </div>
 
                             </div>
                         </form>
                     </div>
                 </div>
-
+                <div class="panel-footer">
+                    <span class="help-block">
+                        <h5>
+                        可接收的词典文件类型为txt，格式为每行一个词
+                        </h5>
+                    </span>
+                </div>
             </div>
-
 
 		</div>
 	</div>
