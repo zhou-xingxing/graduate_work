@@ -8,74 +8,80 @@ Created on Fri Apr 24 18:06:26 2020
 #高光时刻分析
 import pandas as pd
 import numpy as np
-# from pyecharts import Bar,Page,Line,Pie
+from pyecharts import Bar,Page,Line,Pie
 
 #可视化部分-折线图、饼图
-def draw_senti(time,num,avg,pos_avg,neg_avg,pos_prop,neg_prop,fout):
+def draw_senti(time,num,avg,pos_avg,neg_avg,pos_prop,neg_prop):
 #    数据预处理
+# 情感总值
     senti_sum=np.multiply(np.array(num),np.array(avg)).tolist()
     pos_sum=np.multiply(np.array(num),np.array(pos_avg)).tolist()
     neg_sum=np.multiply(np.array(num),np.array(neg_avg)).tolist()
-    
+    # 负变正
     neg_sum=[i*-1 for i in neg_sum]
     neg_avg=[i*-1 for i in neg_avg]
     
 #    不同倾向弹幕比例
     pos_num=np.multiply(np.array(num),np.array(pos_prop)).tolist()
-    pos_num=np.rint(pos_num)
+    pos_num=np.rint(pos_num).tolist()
     neg_num=np.multiply(np.array(num),np.array(neg_prop)).tolist()
-    neg_num=np.rint(neg_num)
+    neg_num=np.rint(neg_num).tolist()
     
     all_pos_prop=sum(pos_num)/sum(num)
     all_neg_prop=sum(neg_num)/sum(num)
     all_mid_prop=1-all_neg_prop-all_pos_prop
     senti_kinds=['正面','中性','负面']
     senti_prop=[all_pos_prop,all_mid_prop,all_neg_prop]
+
+    print('情感特征可视化数据准备完毕')
+
+    return senti_sum,pos_sum,neg_sum,neg_avg,pos_num,neg_num,senti_kinds,senti_prop
     
-    page = Page()
-    
-    pie = Pie("各类弹幕占比","",title_color='black', title_pos='center',width=1600)
-    pie.add("各类弹幕占比",senti_kinds, senti_prop, is_label_show=True,legend_pos='right')
-    page.add(pie)
-    
-    bar = Bar("弹幕数量","",title_color='black', title_pos='center',width=1600)
-    bar.add("弹幕数量", time, num, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
-    page.add(bar)
-    
-    bar = Bar("正面弹幕数量","",title_color='black', title_pos='center',width=1600)
-    bar.add("正面弹幕数量", time, pos_num, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
-    page.add(bar)
-    
-    bar = Bar("负面弹幕数量","",title_color='black', title_pos='center',width=1600)
-    bar.add("负面弹幕数量", time, neg_num, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
-    page.add(bar)
-    
-    bar = Bar("弹幕情感值","",title_color='black', title_pos='center',width=1600)
-    bar.add("弹幕情感值", time, senti_sum, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
-    page.add(bar)
-    
-    bar = Bar("弹幕情感均值","",title_color='black', title_pos='center',width=1600)
-    bar.add("弹幕情感均值", time, avg, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
-    page.add(bar)
-    
-    bar = Bar("正面弹幕情感值","",title_color='black', title_pos='center',width=1600)
-    bar.add("正面弹幕情感值", time, pos_sum, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
-    page.add(bar)
-    
-    bar = Bar("正面弹幕情感均值","",title_color='black', title_pos='center',width=1600)
-    bar.add("正面弹幕情感均值", time, pos_avg, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
-    page.add(bar)
-    
-    bar = Bar("负面弹幕情感值","",title_color='black', title_pos='center',width=1600)
-    bar.add("负面弹幕情感值", time, neg_sum, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
-    page.add(bar)
-    
-    bar = Bar("负面弹幕情感均值","",title_color='black', title_pos='center',width=1600)
-    bar.add("负面弹幕情感均值", time, neg_avg, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
-    page.add(bar)
-    
-    page.render(fout)
-    print('echarts：',fout)
+    # page = Page()
+    #
+    # pie = Pie("各类弹幕占比","",title_color='black', title_pos='center',width=1600)
+    # pie.add("各类弹幕占比",senti_kinds, senti_prop, is_label_show=True,legend_pos='right')
+    # page.add(pie)
+    #
+    #
+    # bar = Bar("弹幕数量","",title_color='black', title_pos='center',width=1600)
+    # bar.add("弹幕数量", time, num, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
+    # page.add(bar)
+    #
+    # bar = Bar("正面弹幕数量","",title_color='black', title_pos='center',width=1600)
+    # bar.add("正面弹幕数量", time, pos_num, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
+    # page.add(bar)
+    #
+    # bar = Bar("负面弹幕数量","",title_color='black', title_pos='center',width=1600)
+    # bar.add("负面弹幕数量", time, neg_num, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
+    # page.add(bar)
+    #
+    # bar = Bar("弹幕情感值","",title_color='black', title_pos='center',width=1600)
+    # bar.add("弹幕情感值", time, senti_sum, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
+    # page.add(bar)
+    #
+    # bar = Bar("弹幕情感均值","",title_color='black', title_pos='center',width=1600)
+    # bar.add("弹幕情感均值", time, avg, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
+    # page.add(bar)
+    #
+    # bar = Bar("正面弹幕情感值","",title_color='black', title_pos='center',width=1600)
+    # bar.add("正面弹幕情感值", time, pos_sum, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
+    # page.add(bar)
+    #
+    # bar = Bar("正面弹幕情感均值","",title_color='black', title_pos='center',width=1600)
+    # bar.add("正面弹幕情感均值", time, pos_avg, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
+    # page.add(bar)
+    #
+    # bar = Bar("负面弹幕情感值","",title_color='black', title_pos='center',width=1600)
+    # bar.add("负面弹幕情感值", time, neg_sum, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
+    # page.add(bar)
+    #
+    # bar = Bar("负面弹幕情感均值","",title_color='black', title_pos='center',width=1600)
+    # bar.add("负面弹幕情感均值", time, neg_avg, mark_line=['average'],mark_point=['max','min'],legend_pos='right',is_more_utils=True)
+    # page.add(bar)
+    # fout="frag_senti_visual.html"
+    # page.render(fout)
+    # print('echarts：',fout)
     
 
 #加载已预测情感倾向的文件
@@ -172,9 +178,10 @@ if __name__=='__main__':
     fin = r"E:/sentiment_system/frag_data/frag_file.csv"
     fout = r"E:/sentiment_system/frag_data/frag_report.txt"
     time,num,avg,pos_avg,neg_avg,pos_prop,neg_prop,senti_class=load_data(fin)
-   # draw_fout="new_room911danmu0209.html"
-   # draw_senti(time,num,avg,pos_avg,neg_avg,pos_prop,neg_prop,draw_fout)
-    senti_report(time,num,avg,pos_avg,neg_avg,pos_prop,neg_prop,senti_class,fout)
+    # draw_fout="frag_senti_visual.html"
+    # senti_sum,pos_sum,neg_sum,neg_avg,pos_num,neg_num,senti_kinds,senti_prop=draw_senti(time,num,avg,pos_avg,neg_avg,pos_prop,neg_prop,draw_fout)
+    # draw_senti(time, num, avg, pos_avg, neg_avg, pos_prop, neg_prop)
+    # senti_report(time,num,avg,pos_avg,neg_avg,pos_prop,neg_prop,senti_class,fout)
 
 
 
