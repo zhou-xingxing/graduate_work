@@ -1,12 +1,10 @@
 import csv, re, os, time
+import pandas as pd
 from langconv import *
 
 
 # 弹幕数据清洗
-# （1）去除无意义弹幕（比如只有一个./,）,过滤特殊字符（非字母数字文字表情）
-# （2）对一些含义完全相同、表达存在细微差异的词（666+）作替换处理
-# （3）英文字母全部小写、中英文标点符号转换、全角半角转换、简体替换繁体
-#  (4) 常见表情符号、颜文字文本化
+
 
 # 文本替换
 def symbol_replace(s):
@@ -91,9 +89,6 @@ def sim_replace(s):
 #print(sim_replace('谢谢老板大气大气大气啊捞 捞捞'))
 
 
-
-
-
 # 表情替换
 def emoji_replace(s,emot_dict):
     # 斗鱼专属表情
@@ -119,9 +114,10 @@ def emoji_replace(s,emot_dict):
 # 开始处理
 # 以此文件的处理比例估算，可以减少1%的数据
 def run_data_clean(fin,fout):    
-#    fin = "../data/room911/room911danmu0206.csv"
-#    fout = "../data/room911/cleaned_room911danmu0206.csv"
-    print("打开：" + fin)
+
+    with open(r"./dict/dyemot.txt", 'r')as f:
+        emot_dict = eval(f.read())
+    print("打开：" + fin,"开始清洗")
     start_time = time.clock()
     with open(fin, 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
@@ -138,22 +134,60 @@ def run_data_clean(fin,fout):
                 writer = csv.writer(nf)
                 writer.writerow(line)
     end_time = time.clock()
-    print("处理结束：" + fout)
-    print("处理时间：" + str(end_time - start_time))
+    print("清洗结束：" + fout)
+    print("清洗时间：" + str(end_time - start_time))
 # 50W 394s 497441/500000=99.5%
 # 23W 188s 
 # 14w 114s
-    
-    
+# 2W 17s
+
+
+# 按每分钟对弹幕进行聚合
+def danmu_60s_frag(fin, fout):
+# 2W 0.7s
+    print('打开：', fin,'开始聚合')
+    start_time=time.clock()
+    day1 = pd.read_csv(fin, header=None)
+    day1.columns = ['id', 'time', 'danmu']
+    day1["time"] = pd.to_datetime(day1.time.values, unit="s", utc=True).tz_convert('Asia/Shanghai').strftime(
+        "%Y-%m-%d %H:%M")
+    # 防刷屏处理
+    day1 = day1.drop_duplicates(subset=['id', 'time', 'danmu'])
+    time_group = day1.groupby('time')
+    # print(time_group.size().describe())
+    # 数量限制
+    time_list = []
+    danmu_list = []
+    num_list = []
+    for gn, gl in time_group:
+        num = len(gl)
+        if  num <30:
+            continue
+        time_list.append(gn)
+        num_list.append(num)
+        danmu_list.append(gl['danmu'].tolist())
+    dic = {'time': time_list, 'danmu': danmu_list, 'num': num_list}
+    new_data = pd.DataFrame(dic)
+    #    print(new_data)
+    new_data.to_csv(fout, index=None)
+    end_time=time.clock()
+    print('按每分钟聚合文件：', fout)
+    print('聚合时间',str(end_time-start_time))
+
+
 if __name__=='__main__':
-    with open(r"../dict/dyemot.txt", 'r')as f:
-        emot_dict = eval(f.read())
-        print("表情符号字典加载完毕")
+    # with open(r"../dict/dyemot.txt", 'r')as f:
+    #     emot_dict = eval(f.read())
+    #     print("表情符号字典加载完毕")
 #    test_str = "[emot:dy101][emot:dy111]❤️❤❤❤🚀🚀🚀🚀🚀🚀❤💩💩💩💩💩💩🎉🎉🎉🎉🎉🎉"
 #    print(emoji_replace(test_str,emot_dict))
 #     fin="../data/room911/room911danmu0209.csv"
 #     fout="../data/room911/cleaned_room911danmu0209.csv"
     
     # run_data_clean(fin,fout)
+    fin="./danmu_data/danmu_cleaned.csv"
+    fout = "./danmu_data/danmu_cleaned_frag.csv"
+
+    danmu_60s_frag(fin,fout)
 
 

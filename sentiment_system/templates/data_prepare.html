@@ -47,21 +47,20 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3>
-                        弹幕数据预处理
+                        上传原始弹幕文件
                     </h3>
                 </div>
                 <div class="panel-body">
                     <div style="display:block;margin:0 auto">
                         <form id="form1" method="post" action="/danmu_upload" enctype="multipart/form-data">
                             <div class="form-group">
-                                <label>
-                                    <h4>上传原始弹幕文件</h4>
-                                </label>
+
                                 <input id="myfile" type="file" name="myfile" class="btn btn-default"/>  <!--后台代码中获取文件是通过form的name来标识的-->
                                 <br/>
                                 <div  style="text-align:center">
                                     <button type="submit" class="btn btn-primary" >上传</button>
                                 </div>
+
 
                             </div>
                         </form>
@@ -75,7 +74,49 @@
                     </span>
                 </div>
             </div>
+            <br/>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                    <h3>
+                        数据预处理
+                    </h3>
+            </div>
+            <div class="panel-body">
+                <div style="display:block;margin:0 auto">
+                    <p>
+                        <h4>1. 数据清洗</h4>
+                    </p>
+                    <table class="table">
+                        <tr><td><a href="/danmu_clean" class="btn btn-primary " role="button" >开始清洗</a></td>
+                            <td><a href="/cleaned_download" class="btn btn-primary " role="button" >下载</a></td></tr>
+                    </table>
+                <br/>
+                    <p>
+                        <h4>2. 按时间聚合弹幕</h4>
+                    </p>
+                    <table class="table">
+                        <tr><td><a href="/danmu_frag" class="btn btn-primary " role="button" >开始聚合</a></td>
+                            <td><a href="/cleaned_frag_download" class="btn btn-primary " role="button" >下载</a></td></tr>
+                    </table>
+                 <br/>
+                    <p>
+                        <h4>3. 提取情感特征</h4>
+                    </p>
+                    <table class="table">
+                        <tr><td><a href="/danmu_senti_feature" class="btn btn-primary " role="button" >开始提取</a></td>
+                            <td><a href="/cleaned_frag_feature_download" class="btn btn-primary " role="button" >下载</a></td></tr>
+                    </table>
 
+                </div>
+            </div>
+            <div class="panel-footer">
+                    <span class="help-block">
+                        <h5>
+                        务必按顺序进行预处理操作
+                        </h5>
+                    </span>
+                </div>
+        </div>
 		</div>
 	</div>
 </div>

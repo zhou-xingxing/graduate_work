@@ -7,7 +7,8 @@ Created on Wed Apr 22 21:22:11 2020
 #弹幕片段机器学习部分
 
 import numpy as np
-from sklearn import svm,tree
+from sklearn import svm
+#from sklearn import tree
 from sklearn.model_selection import train_test_split
 from sklearn.externals import joblib
 from sklearn.metrics import accuracy_score
