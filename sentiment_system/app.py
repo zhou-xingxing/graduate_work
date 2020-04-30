@@ -70,10 +70,10 @@ def user_dict_upload():
         neg_dict.extend(user_neg_dict)
         print('合并后负面词', len(neg_dict))
 
-    ans = '自定义分词词典：' + str(user_fenci_ans) + '<br/>' + '自定义正面词词典：' + str(user_pos_ans) + '<br/>' + '自定义负面词词典：' + str(
+    ans = '自定义分词词典：' + str(user_fenci_ans) + ' ' + '自定义正面词词典：' + str(user_pos_ans) + ' ' + '自定义负面词词典：' + str(
         user_neg_ans)
     print(ans)
-    return ans
+    return render_template("common_result.html",SuccessOrNot=1,ans=ans)
 
 
 # get方式在地址栏会暴露内容，post不会
@@ -128,11 +128,15 @@ def danmu_clean():
     fin = r"E:/sentiment_system/danmu_data/danmu_original.csv"
     if not os.path.isfile(os.path.join(fin)):
         print("未上传弹幕原始数据")
-        return "未上传弹幕原始数据"
+        SuccessOrNot = 0
+        ans = "未上传弹幕原始数据"
+        return render_template("common_result.html",SuccessOrNot=SuccessOrNot,ans=ans)
     fout = r"E:/sentiment_system/danmu_data/danmu_cleaned.csv"
     run_data_clean(fin, fout)
     print("数据清洗完毕")
-    return "数据清洗完毕"
+    SuccessOrNot=1
+    ans="数据清洗完毕"
+    return render_template("common_result.html",SuccessOrNot=SuccessOrNot,ans=ans)
 
 
 # 已清洗文件下载
@@ -145,7 +149,10 @@ def cleaned_download():
         return send_from_directory(file_dir, fname, as_attachment=True)
     else:
         print('未找到已清洗文件')
-        return "未找到已清洗文件"
+        SuccessOrNot = 0
+        ans = "未找到已清洗文件"
+        return render_template("common_result.html", SuccessOrNot=SuccessOrNot, ans=ans)
+
 
 
 # 按分钟聚合弹幕
@@ -155,11 +162,16 @@ def danmu_frag():
     fin = r"E:/sentiment_system/danmu_data/danmu_cleaned.csv"
     if not os.path.isfile(os.path.join(fin)):
         print("未找到已清洗文件")
-        return "未找到已清洗文件"
+        SuccessOrNot = 0
+        ans = "未找到已清洗文件"
+        return render_template("common_result.html", SuccessOrNot=SuccessOrNot, ans=ans)
+
     fout = r"E:/sentiment_system/danmu_data/danmu_cleaned_frag.csv"
     danmu_60s_frag(fin, fout)
     print("数据聚合完毕")
-    return "数据聚合完毕"
+    SuccessOrNot = 1
+    ans = "数据聚合完毕"
+    return render_template("common_result.html", SuccessOrNot=SuccessOrNot, ans=ans)
 
 
 # 已聚合文件下载
@@ -172,7 +184,9 @@ def cleaned_frag_donwload():
         return send_from_directory(file_dir, fname, as_attachment=True)
     else:
         print('未找到已清洗后的弹幕片段文件')
-        return "未找到已清洗后的弹幕片段文件"
+        SuccessOrNot = 0
+        ans = "未找到已清洗后的弹幕片段文件"
+        return render_template("common_result.html", SuccessOrNot=SuccessOrNot, ans=ans)
 
 # 提取情感特征
 @app.route('/danmu_senti_feature')
@@ -181,12 +195,16 @@ def danmu_senti_feature():
     fin = r"E:/sentiment_system/danmu_data/danmu_cleaned_frag.csv"
     if not os.path.isfile(os.path.join(fin)):
         print("未找到已清洗后的弹幕片段文件")
-        return "未找到已清洗后的弹幕片段文件"
+        SuccessOrNot = 0
+        ans = "未找到已清洗后的弹幕片段文件"
+        return render_template("common_result.html", SuccessOrNot=SuccessOrNot, ans=ans)
     fout = r"E:/sentiment_system/danmu_data/danmu_cleaned_frag_feature.csv"
     feature_danmu_frag(fin,fout)
     svm_model_test(fout,fout)
     print("提取情感特征完毕")
-    return "提取情感特征完毕"
+    SuccessOrNot = 1
+    ans = "提取情感特征完毕"
+    return render_template("common_result.html", SuccessOrNot=SuccessOrNot, ans=ans)
 
 # 下载已提取情感特征的文件
 @app.route('/cleaned_frag_feature_download')
@@ -198,7 +216,9 @@ def cleaned_frag_feature_download():
         return send_from_directory(file_dir, fname, as_attachment=True)
     else:
         print('未找到已提取情感特征的弹幕片段文件')
-        return "未找到已提取情感特征的弹幕片段文件"
+        SuccessOrNot = 0
+        ans = "未找到已提取情感特征的弹幕片段文件"
+        return render_template("common_result.html", SuccessOrNot=SuccessOrNot, ans=ans)
 
 # 弹幕片段分析页面
 @app.route('/frag_senti')

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>结果返回页</title>
+     <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+     <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- 设置页面上下位置-->
+    <style>
+        .height-alert{
+            position: absolute;
+            top: 10%;
+            -webkit-transform: translateY(-50%);
+            -moz-transform: translateY(-50%);
+            -ms-transform: translateY(-50%);
+            -o-transform: translateY(-50%);
+            transform: translateY(-50%);
+        }
+
+    </style>
+</head>
+<body>
+<!-- 根据传入的SuccessOrNot显示不同的反馈结果-->
+{% if SuccessOrNot %}
+    <div class="container-fluid" >
+<!-- 居中显示，不同结果设置不同页面链接-->
+        <div class="height-alert alert alert-success col-lg-4 col-lg-offset-4  col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2" >
+{#	    <a href="/frag_senti" class="alert-link"> 上传成功！&emsp;&emsp;点击将返回至片段分析页面，可以继续进行片段分析任务</a>#}
+            <a href="#" class="alert-link" onclick="javascript:history.back(-1);">{{ ans }}！   <br/><br/>点击返回到上一页</a>
+    </div>
+    </div>
+    {% else %}
+    <div class="container-fluid" >
+    <div class="height-alert alert alert-danger col-lg-4 col-lg-offset-4  col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2">
+{#	    <a href="/frag_senti" class="alert-link">上传失败！&emsp;&emsp;请检查文件格式</a>#}
+         <a href="#" class="alert-link" onclick="javascript:history.back(-1);">{{ ans }}！   <br/><br/>点击返回到上一页</a>
+    </div>
+    </div>
+    {% endif %}
+</body>
+</html>
