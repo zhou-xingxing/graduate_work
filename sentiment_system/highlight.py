@@ -108,7 +108,7 @@ def load_data(fin):
 
 def senti_report(time,num,avg,pos_avg,neg_avg,pos_prop,neg_prop,senti_class,fout):
     f=open(fout,'w',encoding='utf-8')
-    print('弹幕片段情感分析报告',file=f)
+    print('弹幕片段高光检测报告',file=f)
 #数量分析
     num_pd=pd.Series(num)
     num_avg=num_pd.mean()
@@ -149,7 +149,7 @@ def senti_report(time,num,avg,pos_avg,neg_avg,pos_prop,neg_prop,senti_class,fout
         if senti_class[i]==-1:
             negative_list.append(i)
     
-    print('\n高光时刻：',str(len(highlight_list))+'个',file=f)
+    print('\n高能时刻：',str(len(highlight_list))+'个',file=f)
     for i in highlight_list:
         print(time[i],file=f)
 
@@ -157,7 +157,7 @@ def senti_report(time,num,avg,pos_avg,neg_avg,pos_prop,neg_prop,senti_class,fout
     for i in fight_list:
         print(time[i],file=f)
                                     
-    print('\n负面弹幕警告：',str(len(negative_list))+'个',file=f)
+    print('\n负面时刻：',str(len(negative_list))+'个',file=f)
     for i in negative_list:
         print(time[i],file=f)
 

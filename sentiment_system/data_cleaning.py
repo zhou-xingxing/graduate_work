@@ -115,6 +115,10 @@ def emoji_replace(s,emot_dict):
 # 以此文件的处理比例估算，可以减少1%的数据
 def run_data_clean(fin,fout):    
 
+    # 如果存在已清洗文件则删除重建
+    if  os.path.isfile(os.path.join(fout)):
+        os.remove(fout)
+
     with open(r"./dict/dyemot.txt", 'r')as f:
         emot_dict = eval(f.read())
     print("打开：" + fin,"开始清洗")
@@ -161,8 +165,9 @@ def danmu_60s_frag(fin, fout):
     num_list = []
     for gn, gl in time_group:
         num = len(gl)
-        if  num <30:
-            continue
+        # 数量少于30片段不分析
+        # if  num <30:
+        #     continue
         time_list.append(gn)
         num_list.append(num)
         danmu_list.append(gl['danmu'].tolist())
