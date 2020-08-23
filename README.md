@@ -24,7 +24,7 @@
 
 ### 文件结构
 
-- 系统界面与使用方法 [用户手册]([https://github.com/zhou-xingxing/graduate_work/blob/master/%E7%9B%B4%E6%92%AD%E5%BC%B9%E5%B9%95%E6%83%85%E6%84%9F%E5%88%86%E6%9E%90%E4%B8%8E%E9%AB%98%E5%85%89%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C.pdf](https://github.com/zhou-xingxing/graduate_work/blob/master/直播弹幕情感分析与高光检测系统用户手册.pdf))
+- 系统界面与使用方法 [用户手册](https://github.com/zhou-xingxing/graduate_work/blob/master/直播弹幕情感分析与高光检测系统用户手册.pdf)
 
 - 弹幕数据 ./data
 - 各类词典文件 ./dict
